@@ -1,23 +1,17 @@
 "use client";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { signIn } from "@/lib/auth/client/auth-client";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 import { Logo } from "./landing/logo";
 import { useState } from "react";
 import { toast } from "sonner";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import Link from "next/link";
 
 export function LoginCard() {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleGoogleSignIn() {
+    if (isLoading) return;
     try {
       setIsLoading(true);
       await signIn.social({
@@ -32,29 +26,33 @@ export function LoginCard() {
   }
 
   return (
-    <Card className="border-border bg-card w-full">
-      <CardHeader className="pb-6 text-center">
-        <div className="mb-6 flex items-center justify-center gap-2">
+    <div className="w-full border border-white/8 bg-[#050505]/60 backdrop-blur-sm">
+      <div className="flex flex-col gap-6 px-6 pt-8 pb-6 text-center">
+        <div className="flex items-center justify-center gap-2">
           <Logo size={32} />
           <span className="font-mono text-lg font-semibold tracking-tight text-foreground">
             Invitely.gg
           </span>
         </div>
 
-        <CardTitle className="font-mono text-xl font-semibold text-foreground">
-          Welcome back
-        </CardTitle>
-        <CardDescription className="font-mono text-sm text-muted-foreground">
-          Sign in to start sending invitations
-        </CardDescription>
-      </CardHeader>
+        <div className="flex flex-col gap-2">
+          <h1 className="font-mono text-xl font-semibold tracking-tight text-foreground">
+            Welcome back
+          </h1>
+          <p className="font-mono text-sm text-muted-foreground">
+            Sign in to start sending invitations
+          </p>
+        </div>
+      </div>
 
-      <CardContent className="flex flex-col gap-4">
-        <Button
+      <div className="flex flex-col gap-4 px-6 pb-8">
+        <HoverBorderGradient
+          containerClassName={`rounded-none w-full ${isLoading ? "opacity-60 pointer-events-none" : ""}`}
+          className="rounded-none font-mono text-sm h-11 w-full px-6 bg-black text-white flex items-center justify-center gap-3 cursor-pointer"
+          as="button"
+          duration={1.5}
           onClick={handleGoogleSignIn}
-          disabled={isLoading}
-          variant="outline"
-          className="w-full gap-3 border-border font-mono text-sm"
+          aria-disabled={isLoading}
         >
           {isLoading ? (
             <>
@@ -67,9 +65,10 @@ export function LoginCard() {
               Continue with Google
             </>
           )}
-        </Button>
+        </HoverBorderGradient>
 
-        <Separator className="bg-border" />
+        <Separator className="bg-white/8" />
+
         <p className="text-center font-mono text-xs text-muted-foreground leading-relaxed">
           By signing in, you agree to our{" "}
           <Link
@@ -90,13 +89,13 @@ export function LoginCard() {
         <div className="text-center">
           <Link
             href="/"
-            className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors duration-300"
           >
             ← Back to home
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

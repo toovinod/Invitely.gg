@@ -1,3 +1,4 @@
+import { GrainBackdrop } from "@/components/landing/grain-backdrop";
 import { Separator } from "@/components/ui/separator";
 import { Logo } from "@/components/landing/logo";
 import { ArrowLeft } from "lucide-react";
@@ -80,68 +81,73 @@ const sections = [
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-background">
-      <div className="max-w-3xl mx-auto px-6 py-16">
+    <main className="relative min-h-screen overflow-hidden">
+      <GrainBackdrop />
+
+      <div className="relative max-w-3xl mx-auto px-6 py-16">
         <Link
           href="/"
-          className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors w-fit mb-10"
+          className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors duration-300 w-fit mb-10"
         >
           <ArrowLeft className="h-3 w-3" />
           Back to home
         </Link>
 
-        <div className="flex flex-col gap-3 mb-10">
-          <div className="flex items-center gap-2 mb-2">
-            <Logo size={24} />
-            <span className="font-mono text-sm font-semibold text-foreground">
-              Invitely.gg
-            </span>
+        <div className="relative border border-white/8 bg-[#050505]/40 backdrop-blur-sm px-6 sm:px-10 py-10 sm:py-12">
+          <div className="flex flex-col gap-3 mb-10">
+            <div className="flex items-center gap-2 mb-2">
+              <Logo size={24} />
+              <span className="font-mono text-sm font-semibold text-foreground">
+                Invitely.gg
+              </span>
+            </div>
+            <h1 className="font-mono text-2xl font-bold text-foreground">
+              Privacy Policy
+            </h1>
+            <p className="font-mono text-xs text-muted-foreground">
+              Last updated: March 10, 2026
+            </p>
           </div>
-          <h1 className="font-mono text-2xl font-bold text-foreground">
-            Privacy Policy
-          </h1>
-          <p className="font-mono text-xs text-muted-foreground">
-            Last updated: March 10, 2026
+
+          <Separator className="bg-white/8 mb-10" />
+
+          <p className="font-mono text-xs text-muted-foreground leading-relaxed mb-10">
+            At Invitely.gg, we take your privacy seriously. This policy explains
+            what data we collect, how we use it, and your rights regarding your
+            information.
           </p>
-        </div>
 
-        <Separator className="bg-border mb-10" />
-        <p className="font-mono text-xs text-muted-foreground leading-relaxed mb-10">
-          At Invitely.gg, we take your privacy seriously. This policy explains
-          what data we collect, how we use it, and your rights regarding your
-          information.
-        </p>
+          <div className="flex flex-col gap-8">
+            {sections.map(
+              ({ title, content }: { title: string; content: string }) => (
+                <div key={title} className="flex flex-col gap-2">
+                  <h2 className="font-mono text-sm font-semibold text-foreground">
+                    {title}
+                  </h2>
+                  <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+                    {content}
+                  </p>
+                </div>
+              ),
+            )}
+          </div>
 
-        <div className="flex flex-col gap-8">
-          {sections.map(
-            ({ title, content }: { title: string; content: string }) => (
-              <div key={title} className="flex flex-col gap-2">
-                <h2 className="font-mono text-sm font-semibold text-foreground">
-                  {title}
-                </h2>
-                <p className="font-mono text-xs text-muted-foreground leading-relaxed">
-                  {content}
-                </p>
-              </div>
-            ),
-          )}
-        </div>
+          <Separator className="bg-white/8 mt-12 mb-8" />
 
-        <Separator className="bg-border mt-12 mb-8" />
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link
-            href="/terms"
-            className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
-          >
-            Terms of Service →
-          </Link>
-          <Link
-            href="/login"
-            className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Sign in to Invitely.gg
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <Link
+              href="/terms"
+              className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors duration-300 underline underline-offset-4"
+            >
+              Terms of Service →
+            </Link>
+            <Link
+              href="/login"
+              className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors duration-300"
+            >
+              Sign in to Invitely.gg
+            </Link>
+          </div>
         </div>
       </div>
     </main>
