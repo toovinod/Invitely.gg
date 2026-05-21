@@ -48,7 +48,6 @@ export function NewEventForm({
     prevStep,
     toggleRecipient,
     toggleWorkspace,
-    getWorkspaceSelectionState,
     polishWithAI,
     submitEvent,
     scheduleEvent,
@@ -95,7 +94,6 @@ export function NewEventForm({
           workspaces={workspaces}
           onToggleRecipient={toggleRecipient}
           onToggleWorkspace={toggleWorkspace}
-          getWorkspaceSelectionState={getWorkspaceSelectionState}
           onNext={nextStep}
           onBack={prevStep}
         />

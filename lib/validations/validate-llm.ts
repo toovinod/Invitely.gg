@@ -1,7 +1,11 @@
-import { ZodLLMInsightsResponse, ZodLLMOptimizeResponse } from "@/lib/zod/llm";
-import { generateRsvpInsightsPrompt } from "../prompts/analytics";
-import { formatEventDate } from "../utils";
+import { generatePollBestSlotPrompt } from "../prompts/poll";
+import { AnalyticsService } from "./validate-analytics";
+import { ZodPollBestSlotResponse } from "../zod/poll";
+import { PollBestSlotInsight } from "../polls/types";
+import { AnalyticsRange } from "../analytics/types";
 import { InvitationData } from "../types/index";
+import { PollService } from "./validate-poll";
+import { formatEventDate } from "../utils";
 import { llm } from "@/lib/llm/llm";
 import { db } from "../db/prisma";
 import {
@@ -12,6 +16,15 @@ import {
   NotFoundError,
   TimeoutError,
 } from "@/lib/shared/exceptions";
+import {
+  generateLifetimeAnalyticsPrompt,
+  generateRsvpInsightsPrompt,
+} from "../prompts/analytics";
+import {
+  ZodLLMInsightsResponse,
+  ZodLLMOptimizeResponse,
+  ZodLifetimeAnalyticsResponse,
+} from "@/lib/zod/llm";
 
 export const LLMService = {
   async optimizeInvite(prompt: string) {
@@ -135,6 +148,144 @@ export const LLMService = {
     } catch (e) {
       console.log(e);
       throw new Error("AI failed to provide valid insights");
+    }
+  },
+
+  async LifetimeInsights(userId: string, range: AnalyticsRange) {
+    const data = await AnalyticsService.getDashboardData(userId, range);
+
+    if (data.isEmpty || data.lifetime.eventsSent === 0) {
+      throw new ConflictError(
+        "Send at least one event before generating analytics insights.",
+      );
+    }
+
+    const rangeLabel =
+      range === "30d"
+        ? "last 30 days"
+        : range === "90d"
+          ? "last 90 days"
+          : "all time";
+
+    const topEngagedSummary = data.topEngaged
+      .slice(0, 3)
+      .map(
+        (g) =>
+          `${g.name ?? g.email} (${g.attendingCount} attended of ${g.invitedCount} invites)`,
+      )
+      .join("; ");
+
+    const bestSlot = data.bestSendTimes[0];
+    const bestSendTimeSummary = bestSlot
+      ? `${bestSlot.dayLabel} ${bestSlot.hourLabel} (${bestSlot.responseRate}% from ${bestSlot.sampleSize} invites)`
+      : "";
+
+    const prompt = generateLifetimeAnalyticsPrompt({
+      rangeLabel,
+      eventsSent: data.lifetime.eventsSent,
+      totalInvites: data.lifetime.totalInvites,
+      responseRate: data.rates.responseRate,
+      attendingRate: data.rates.attendingRate,
+      openRate: data.rates.openRate,
+      avgResponseHours: data.lifetime.avgResponseHours,
+      trendCount: data.trend.length,
+      trendRates: data.trend.map((p) => p.responseRate),
+      topEngagedSummary,
+      ghostersCount: data.ghosters.length,
+      bestSendTimeSummary,
+      recurringSeriesCount: data.series.length,
+    });
+
+    try {
+      const raw = await llm(prompt);
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(raw);
+      } catch {
+        console.error("[AI_PARSE_FAILURE]:", raw);
+        throw new InternalServerError(
+          "LLM returned an invalid analytics response.",
+        );
+      }
+      const validated = ZodLifetimeAnalyticsResponse.safeParse(parsed);
+      if (!validated.success) {
+        console.error("[AI_SHAPE_FAILURE]:", validated.error.format());
+        throw new InternalServerError(
+          "LLM analytics response did not match the expected template.",
+        );
+      }
+      return validated.data;
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message === "gemini response error") {
+        throw new TimeoutError(
+          "The LLM took too long to respond. please try again.",
+        );
+      }
+      throw error;
+    }
+  },
+
+  async pollBestSlot(
+    pollId: string,
+    userId: string,
+  ): Promise<PollBestSlotInsight> {
+    const summary = await PollService.pollSummaryForLlm(pollId, userId);
+    if (!summary) {
+      throw new ConflictError(
+        "Wait for at least one response before picking the best slot.",
+      );
+    }
+
+    const prompt = generatePollBestSlotPrompt({
+      title: summary.title,
+      inviteeCount: summary.inviteeCount,
+      responseCount: summary.responseCount,
+      options: summary.options.map((o) => ({
+        id: o.id,
+        iso: o.startAt,
+        voteCount: o.voteCount,
+      })),
+    });
+
+    const validIds = new Set(summary.options.map((o) => o.id));
+
+    try {
+      const raw = await llm(prompt);
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(raw);
+      } catch {
+        console.error("[AI_PARSE_FAILURE]:", raw);
+        throw new InternalServerError(
+          "LLM returned an invalid best-slot response.",
+        );
+      }
+      const validated = ZodPollBestSlotResponse.safeParse(parsed);
+      if (!validated.success) {
+        console.error("[AI_SHAPE_FAILURE]:", validated.error.format());
+        throw new InternalServerError(
+          "LLM best-slot response did not match the expected template.",
+        );
+      }
+
+      if (!validIds.has(validated.data.optionId)) {
+        const fallback = [...summary.options].sort(
+          (a, b) => b.voteCount - a.voteCount,
+        )[0];
+        return {
+          optionId: fallback.id,
+          reason: `Most votes (${fallback.voteCount}/${summary.responseCount}).`,
+          confidence: "low",
+        };
+      }
+      return validated.data;
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message === "gemini response error") {
+        throw new TimeoutError(
+          "The LLM took too long to respond. please try again.",
+        );
+      }
+      throw error;
     }
   },
 };

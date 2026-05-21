@@ -56,3 +56,72 @@ Return exactly this JSON shape:
 }
 `.trim();
 }
+
+// buildLifetimeAnalyticsPrompt
+export interface LifetimeAnalyticsPromptData {
+  rangeLabel: string;
+  eventsSent: number;
+  totalInvites: number;
+  responseRate: number;
+  attendingRate: number;
+  openRate: number;
+  avgResponseHours: number | null;
+  trendCount: number;
+  trendRates: number[];
+  topEngagedSummary: string;
+  ghostersCount: number;
+  bestSendTimeSummary: string;
+  recurringSeriesCount: number;
+}
+
+export function generateLifetimeAnalyticsPrompt(
+  data: LifetimeAnalyticsPromptData,
+): string {
+  const trendDirection =
+    data.trendRates.length < 2
+      ? "not enough data"
+      : data.trendRates[data.trendRates.length - 1] > data.trendRates[0] + 5
+        ? "improving"
+        : data.trendRates[data.trendRates.length - 1] < data.trendRates[0] - 5
+          ? "declining"
+          : "stable";
+
+  return `
+You are a senior event analytics consultant reviewing a user's lifetime invitation history on Invitely.gg.
+
+Time range: ${data.rangeLabel}
+
+Lifetime stats:
+- Events sent: ${data.eventsSent}
+- Invitations sent: ${data.totalInvites}
+- Response rate: ${data.responseRate}%
+- Attending rate (of those who replied): ${data.attendingRate}%
+- Open rate: ${data.openRate}%
+- Avg response time: ${data.avgResponseHours !== null ? `${data.avgResponseHours} hours` : "not available"}
+- Recurring series active: ${data.recurringSeriesCount}
+- Ghosters (invited 2+ times, never responded): ${data.ghostersCount}
+
+Response-rate trend across the last ${data.trendCount} sent events: ${data.trendRates.join(", ")}%
+Observed direction: ${trendDirection}
+
+Top engaged guests: ${data.topEngagedSummary || "none yet"}
+Best performing send slot: ${data.bestSendTimeSummary || "insufficient data"}
+
+Your job:
+Write an executive-level summary in three fields. Be specific. Use the actual numbers above. Avoid generic platitudes.
+
+Field rules:
+- summary: 2 to 3 sentences. Lead with the headline number. Mention the direction of the trend if it's not stable.
+- topInsight: ONE sharp observation referencing actual numbers. BAD: "You have a good response rate." GOOD: "Your last 4 events averaged 78% response rate, up from 60% earlier in the period."
+- recommendation: ONE concrete action the user could take this week. Reference a specific guest cohort, send slot, or series when possible.
+- trend: "improving" | "stable" | "declining". Mirror the observed direction unless the numbers contradict it.
+
+Return ONLY valid JSON, no markdown, no backticks:
+{
+  "summary": "2-3 sentences with specific numbers",
+  "topInsight": "sharp observation referencing actual numbers",
+  "recommendation": "one concrete action for this week",
+  "trend": "improving" | "stable" | "declining"
+}
+`.trim();
+}

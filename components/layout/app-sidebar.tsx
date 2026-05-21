@@ -1,6 +1,4 @@
 "use client";
-
-import { Calendar, Users, FileText, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "@/lib/auth/client/auth-client";
 import type { User } from "@/lib/auth/server/auth";
@@ -18,10 +16,22 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
+import {
+  Calendar,
+  Users,
+  FileText,
+  LogOut,
+  CalendarDays,
+  BarChart3,
+  Vote,
+} from "lucide-react";
 
 const navItems = [
   { href: "/workspace", label: "Workspaces", icon: Users },
   { href: "/events", label: "Events", icon: Calendar },
+  { href: "/calendar", label: "Calendar", icon: CalendarDays },
+  { href: "/polls", label: "Polls", icon: Vote },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/templates", label: "Templates", icon: FileText },
 ];
 

@@ -7,18 +7,20 @@ datasource db {
 }
 
 model User {
-  id            String          @id
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  workSpaces    WorkSpace[]
-  events        Event[]
-  templates     EventTemplate[]
+  id                String             @id
+  name              String
+  email             String
+  emailVerified     Boolean
+  image             String?
+  createdAt         DateTime
+  updatedAt         DateTime
+  sessions          Session[]
+  accounts          Account[]
+  workSpaces        WorkSpace[]
+  events            Event[]
+  templates         EventTemplate[]
+  calendarFeedToken CalendarFeedToken?
+  polls             Poll[]
 
   @@unique([email])
   @@map("user")
@@ -96,28 +98,29 @@ model WorkSpaceMember {
 }
 
 model Event {
-  id               String          @id @default(uuid())
-  userId           String
-  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name             String
-  desc             String
-  eventAt          DateTime
-  location         String
-  emailSubject     String
-  emailBody        String
-  status           EventStatus     @default(active)
-  cancelledAt      DateTime?
-  scheduledAt      DateTime?
-  sentAt           DateTime?
-  autoInvite       Boolean?        @default(false)
-  inviteSendOffset Int?
-  recurrence       Recurrence?
-  parentEventId    String?
-  parentEvent      Event?          @relation("RecurringEvents", fields: [parentEventId], references: [id], onDelete: SetNull)
-  childEvents      Event[]         @relation("RecurringEvents")
-  createdAt        DateTime        @default(now())
-  invitations      Invitation[]
-  templates        EventTemplate[]
+  id                String          @id @default(uuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String
+  desc              String
+  eventAt           DateTime
+  location          String
+  emailSubject      String
+  emailBody         String
+  status            EventStatus     @default(active)
+  cancelledAt       DateTime?
+  scheduledAt       DateTime?
+  sentAt            DateTime?
+  autoInvite        Boolean?        @default(false)
+  inviteSendOffset  Int?
+  recurrence        Recurrence?
+  parentEventId     String?
+  parentEvent       Event?          @relation("RecurringEvents", fields: [parentEventId], references: [id], onDelete: SetNull)
+  childEvents       Event[]         @relation("RecurringEvents")
+  finalizedFromPoll Poll?           @relation("PollFinalEvent")
+  createdAt         DateTime        @default(now())
+  invitations       Invitation[]
+  templates         EventTemplate[]
 
   @@index([userId])
   @@index([userId, status])
@@ -180,4 +183,87 @@ enum Recurrence {
   weekly
   monthly
   annually
+}
+
+model CalendarFeedToken {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@map("calendar_feed_tokens")
+}
+
+enum PollStatus {
+  open
+  finalized
+  cancelled
+}
+
+model Poll {
+  id           String        @id @default(uuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  location     String?
+  closesAt     DateTime?
+  status       PollStatus    @default(open)
+  finalEventId String?       @unique
+  finalEvent   Event?        @relation("PollFinalEvent", fields: [finalEventId], references: [id], onDelete: SetNull)
+  finalizedAt  DateTime?
+  options      PollOption[]
+  invitees     PollInvitee[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("polls")
+}
+
+model PollOption {
+  id        String     @id @default(uuid())
+  pollId    String
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  startAt   DateTime
+  endAt     DateTime?
+  votes     PollVote[]
+  createdAt DateTime   @default(now())
+
+  @@index([pollId])
+  @@map("poll_options")
+}
+
+model PollInvitee {
+  id          String     @id @default(uuid())
+  pollId      String
+  poll        Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  email       String
+  name        String?
+  token       String     @unique
+  respondedAt DateTime?
+  votes       PollVote[]
+  createdAt   DateTime   @default(now())
+
+  @@unique([pollId, email])
+  @@index([pollId])
+  @@index([token])
+  @@map("poll_invitees")
+}
+
+model PollVote {
+  id        String      @id @default(uuid())
+  optionId  String
+  option    PollOption  @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  inviteeId String
+  invitee   PollInvitee @relation(fields: [inviteeId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+
+  @@unique([optionId, inviteeId])
+  @@index([inviteeId])
+  @@map("poll_votes")
 }

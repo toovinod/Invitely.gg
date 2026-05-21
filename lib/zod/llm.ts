@@ -38,3 +38,14 @@ export const ZodLLMInsightsResponse = z.object({
   suggestion: z.string(),
   urgency: z.enum(["low", "medium", "high"]),
 });
+
+export const ZodLifetimeAnalytics = z.object({
+  range: z.enum(["30d", "90d", "all"]).optional().default("all"),
+});
+
+export const ZodLifetimeAnalyticsResponse = z.object({
+  summary: z.string(),
+  topInsight: z.string(),
+  recommendation: z.string(),
+  trend: z.enum(["improving", "stable", "declining"]),
+});
