@@ -29,14 +29,14 @@ export function MemberList({ members, workspaceId }: MemberListProps) {
   }
 
   return (
-    <ul className="flex flex-col divide-y divide-border">
+    <ul className="flex flex-col divide-y divide-white/5">
       {members.map((member: Member) => (
         <li
           key={member.id}
-          className="flex items-center justify-between gap-3 py-2.5 group"
+          className="flex items-center justify-between gap-3 py-2.5 group/member"
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="shrink-0 size-7 rounded-full border border-border bg-muted/60 flex items-center justify-center font-sans text-xs font-medium text-foreground">
+            <div className="shrink-0 size-7 rounded-full border border-white/8 bg-white/4 flex items-center justify-center font-sans text-xs font-medium text-foreground">
               {getInitial(member)}
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
@@ -55,7 +55,7 @@ export function MemberList({ members, workspaceId }: MemberListProps) {
             </div>
           </div>
 
-          <div className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity shrink-0">
+          <div className="opacity-0 group-hover/member:opacity-100 focus-within:opacity-100 transition-opacity shrink-0">
             <MemberDeleteDialog
               memberId={member.id}
               memberEmail={member.email}

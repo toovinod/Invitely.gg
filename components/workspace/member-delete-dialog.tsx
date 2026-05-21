@@ -45,9 +45,9 @@ export function MemberDeleteDialog({
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden">
-        <AlertDialogHeader className="px-6 pt-6 pb-4 border-b border-border">
-          <AlertDialogTitle className="font-sans text-base font-semibold tracking-tight">
+      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden border-white/8 bg-[#0a0a0a]">
+        <AlertDialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <AlertDialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Remove member
           </AlertDialogTitle>
           <AlertDialogDescription className="font-sans text-sm text-muted-foreground">
@@ -57,8 +57,8 @@ export function MemberDeleteDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter className="px-6 py-4 gap-2">
-          <AlertDialogCancel className="font-sans text-sm h-9 cursor-pointer mt-0">
+        <AlertDialogFooter className="px-5 sm:px-6 py-4 gap-2">
+          <AlertDialogCancel className="font-sans text-sm h-9 cursor-pointer mt-0 border-white/8 hover:border-white/15 hover:bg-white/4">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction

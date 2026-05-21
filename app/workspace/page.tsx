@@ -17,15 +17,40 @@ export const metadata: Metadata = {
 
 const MAX_WORKSPACES = 5;
 
+function PageBackdrop() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+    >
+      <div
+        className="absolute -top-40 right-[-15%] h-[55vh] w-[55vh] opacity-60"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 45%, rgba(0,0,0,0) 75%)",
+          filter: "blur(40px)",
+        }}
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 h-[40vh]"
+        style={{
+          background:
+            "radial-gradient(60% 100% at 30% 100%, rgba(255,255,255,0.025) 0%, rgba(0,0,0,0) 70%)",
+        }}
+      />
+    </div>
+  );
+}
+
 function PageHeader() {
   return (
     <div className="flex flex-col gap-1.5">
-      <h1 className="font-sans text-2xl font-semibold tracking-tight text-foreground">
+      <h1 className="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
         Workspaces
       </h1>
-      <p className="font-sans text-sm text-muted-foreground">
-        Group your contacts by relationship family, work, friends and send
-        invitations at scale.
+      <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-xl">
+        Group your contacts by family, work, friends and send invitations at
+        scale.
       </p>
     </div>
   );
@@ -48,7 +73,7 @@ async function WorkspaceSection() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-center justify-between gap-3 flex-wrap border-b border-border pb-4">
+      <div className="flex items-center justify-between gap-3 flex-wrap border-b border-white/8 pb-4">
         <p className="font-sans text-sm text-muted-foreground">
           {workspaces.length === 0 ? (
             "Create your first workspace to start organising contacts."
@@ -75,7 +100,7 @@ async function WorkspaceSection() {
               <Button
                 variant="outline"
                 size="sm"
-                className="font-sans text-sm gap-1.5 cursor-pointer h-8"
+                className="font-sans text-sm gap-1.5 cursor-pointer h-8 border-white/8 hover:border-white/15 hover:bg-white/4"
               >
                 <Send className="h-3.5 w-3.5" />
                 Send invitations
@@ -94,7 +119,8 @@ async function WorkspaceSection() {
 
 export default function WorkspacePage() {
   return (
-    <div className="flex flex-col gap-7">
+    <div className="relative flex flex-col gap-6 sm:gap-7">
+      <PageBackdrop />
       <PageHeader />
       <Suspense fallback={<WorkspaceListSkeleton />}>
         <WorkspaceSection />

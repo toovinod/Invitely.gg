@@ -27,7 +27,7 @@ export function DashboardLayout({ user, children }: DashboardLayoutProps) {
               Invitely.gg
             </span>
           </header>
-          <main className="flex-1 w-full px-6 py-8 max-w-5xl mx-auto">
+          <main className="flex-1 w-full px-4 sm:px-6 py-6 sm:py-8 max-w-5xl mx-auto">
             {children}
           </main>
         </SidebarInset>

@@ -54,18 +54,24 @@ export function WorkspaceCreateDialog({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
-          <DialogTitle className="font-sans text-base font-semibold tracking-tight">
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden border-white/8 bg-[#0a0a0a]">
+        <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <DialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Create workspace
           </DialogTitle>
           <DialogDescription className="font-sans text-sm text-muted-foreground">
-            Group your contacts by relationship. Up to {MAX_WORKSPACES}{" "}
-            workspaces, {currentCount} used.
+            Group your contacts by relationship. Up to{" "}
+            <span className="font-mono text-foreground">{MAX_WORKSPACES}</span>{" "}
+            workspaces,{" "}
+            <span className="font-mono text-foreground">{currentCount}</span>{" "}
+            used.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-6 py-5">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-5 px-5 sm:px-6 py-5"
+        >
           <div className="flex flex-col gap-2">
             <Label
               htmlFor="workspace-name"
@@ -78,13 +84,12 @@ export function WorkspaceCreateDialog({
               placeholder="e.g. College, Office, Family"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="font-sans text-sm h-10 px-3"
+              className="font-sans text-sm h-10 px-3 border-white/8 bg-black/40 focus-visible:border-white/20 focus-visible:ring-white/5"
               maxLength={50}
               autoFocus
             />
             <p className="font-sans text-xs text-muted-foreground">
-              Pick something short and memorable. You can hold up to 25 contacts
-              per workspace.
+              Pick something short and memorable. Holds up to 25 contacts.
             </p>
           </div>
 
@@ -93,7 +98,7 @@ export function WorkspaceCreateDialog({
               type="button"
               variant="outline"
               size="sm"
-              className="font-sans text-sm h-9 cursor-pointer"
+              className="font-sans text-sm h-9 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >

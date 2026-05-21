@@ -24,7 +24,7 @@ interface MemberAddDialogProps {
 }
 
 interface MemberRow {
-  id: string; // local only for key
+  id: string;
   name: string;
   email: string;
 }
@@ -112,7 +112,7 @@ export function MemberAddDialog({
         <Button
           variant="outline"
           size="sm"
-          className="font-sans text-sm gap-1.5 h-8 cursor-pointer"
+          className="font-sans text-sm gap-1.5 h-8 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
           disabled={isAtLimit}
           title={isAtLimit ? "Workspace is full (25/25)" : undefined}
         >
@@ -121,9 +121,9 @@ export function MemberAddDialog({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg p-0 overflow-hidden">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
-          <DialogTitle className="font-sans text-base font-semibold tracking-tight">
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-white/8 bg-[#0a0a0a]">
+        <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <DialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Add members
           </DialogTitle>
           <DialogDescription className="font-sans text-sm text-muted-foreground">
@@ -137,7 +137,10 @@ export function MemberAddDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-6 py-5">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 px-5 sm:px-6 py-5"
+        >
           <div className="grid grid-cols-[1fr_1fr_32px] gap-2 px-1">
             <Label className="font-sans text-xs font-medium text-muted-foreground">
               Name <span className="text-muted-foreground/60">(optional)</span>
@@ -158,14 +161,14 @@ export function MemberAddDialog({
                   placeholder="Shambavi"
                   value={row.name}
                   onChange={(e) => updateRow(row.id, "name", e.target.value)}
-                  className="font-sans text-sm h-9 px-3"
+                  className="font-sans text-sm h-9 px-3 border-white/8 bg-black/40 focus-visible:border-white/20 focus-visible:ring-white/5"
                 />
                 <Input
                   placeholder="shambavi@gmail.com"
                   type="email"
                   value={row.email}
                   onChange={(e) => updateRow(row.id, "email", e.target.value)}
-                  className="font-mono text-sm h-9 px-3"
+                  className="font-mono text-sm h-9 px-3 border-white/8 bg-black/40 focus-visible:border-white/20 focus-visible:ring-white/5"
                   required
                 />
                 <Button
@@ -188,7 +191,7 @@ export function MemberAddDialog({
               type="button"
               variant="ghost"
               size="sm"
-              className="font-sans text-sm gap-1.5 self-start h-8 text-muted-foreground hover:text-foreground cursor-pointer"
+              className="font-sans text-sm gap-1.5 self-start h-8 text-muted-foreground hover:text-foreground hover:bg-white/4 cursor-pointer"
               onClick={addRow}
             >
               <Plus className="h-3.5 w-3.5" />
@@ -201,7 +204,7 @@ export function MemberAddDialog({
               type="button"
               variant="outline"
               size="sm"
-              className="font-sans text-sm h-9 cursor-pointer"
+              className="font-sans text-sm h-9 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
               onClick={handleClose}
               disabled={isLoading}
             >

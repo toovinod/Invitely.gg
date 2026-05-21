@@ -50,30 +50,30 @@ export function SummaryCardsSkeleton() {
 export function WorkspaceListSkeleton() {
   return (
     <div className="flex flex-col gap-5 animate-pulse">
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="h-3 w-64 bg-muted" />
+      <div className="flex items-center justify-between border-b border-white/8 pb-4 gap-3 flex-wrap">
+        <div className="h-3 w-56 sm:w-64 bg-white/5" />
         <div className="flex items-center gap-2">
-          <div className="h-8 w-36 bg-muted" />
-          <div className="h-8 w-32 bg-muted" />
+          <div className="h-8 w-32 sm:w-36 bg-white/5" />
+          <div className="h-8 w-28 sm:w-32 bg-white/5" />
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
         {[...Array(2)].map((_, i) => (
           <div
             key={i}
-            className="border border-border bg-card flex flex-col gap-3 p-5"
+            className="border border-white/8 bg-[#0a0a0a] flex flex-col gap-3 p-5"
           >
             <div className="flex flex-col gap-2">
-              <div className="h-4 w-32 bg-muted" />
-              <div className="h-2 w-24 bg-muted" />
+              <div className="h-4 w-32 bg-white/5" />
+              <div className="h-2 w-24 bg-white/5" />
             </div>
             <div className="flex flex-col gap-2 pt-2">
               {[...Array(3)].map((__, j) => (
                 <div key={j} className="flex items-center gap-3">
-                  <div className="h-7 w-7 rounded-full bg-muted" />
+                  <div className="h-7 w-7 rounded-full bg-white/5" />
                   <div className="flex flex-col gap-1.5 flex-1">
-                    <div className="h-2 w-24 bg-muted" />
-                    <div className="h-2 w-40 bg-muted" />
+                    <div className="h-2 w-24 bg-white/5" />
+                    <div className="h-2 w-40 bg-white/5" />
                   </div>
                 </div>
               ))}
