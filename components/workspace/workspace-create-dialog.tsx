@@ -45,51 +45,55 @@ export function WorkspaceCreateDialog({
       <DialogTrigger asChild>
         <Button
           size="sm"
-          className="font-mono text-xs gap-2 cursor-pointer"
+          className="font-sans text-sm gap-1.5 cursor-pointer h-8"
           disabled={isAtLimit}
           title={isAtLimit ? "Maximum 5 workspaces allowed" : undefined}
         >
-          <Plus className="h-3 w-3" />
-          New Workspace
+          <Plus className="h-3.5 w-3.5" />
+          New workspace
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="font-mono sm:max-w-sm">
-        <DialogHeader>
-          <DialogTitle className="font-mono text-sm">
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
+          <DialogTitle className="font-sans text-base font-semibold tracking-tight">
             Create workspace
           </DialogTitle>
-          <DialogDescription className="font-mono text-xs text-muted-foreground">
-            Group your contacts by relationship. Max {MAX_WORKSPACES}{" "}
-            workspaces.
+          <DialogDescription className="font-sans text-sm text-muted-foreground">
+            Group your contacts by relationship. Up to {MAX_WORKSPACES}{" "}
+            workspaces, {currentCount} used.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-6 py-5">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="workspace-name" className="font-mono text-xs">
-              Name
+            <Label
+              htmlFor="workspace-name"
+              className="font-sans text-sm font-medium text-foreground"
+            >
+              Workspace name
             </Label>
             <Input
               id="workspace-name"
               placeholder="e.g. College, Office, Family"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="font-mono text-sm h-9"
+              className="font-sans text-sm h-10 px-3"
               maxLength={50}
               autoFocus
             />
-            <p className="text-xs text-muted-foreground">
-              {currentCount}/{MAX_WORKSPACES} workspaces used
+            <p className="font-sans text-xs text-muted-foreground">
+              Pick something short and memorable. You can hold up to 25 contacts
+              per workspace.
             </p>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm h-9 cursor-pointer"
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >
@@ -98,10 +102,10 @@ export function WorkspaceCreateDialog({
             <Button
               type="submit"
               size="sm"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm h-9 cursor-pointer"
               disabled={isLoading || !name.trim()}
             >
-              {isLoading ? "Creating..." : "Create"}
+              {isLoading ? "Creating..." : "Create workspace"}
             </Button>
           </DialogFooter>
         </form>

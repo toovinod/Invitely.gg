@@ -49,19 +49,38 @@ export function SummaryCardsSkeleton() {
 
 export function WorkspaceListSkeleton() {
   return (
-    <div className="flex flex-col gap-3">
-      {[...Array(3)].map((_, i) => (
-        <div
-          key={i}
-          className="border border-border p-4 flex items-center justify-between animate-pulse"
-        >
-          <div className="flex flex-col gap-2">
-            <div className="h-3 w-40 bg-muted rounded-none" />
-            <div className="h-2 w-24 bg-muted rounded-none" />
-          </div>
-          <div className="h-2 w-16 bg-muted rounded-none" />
+    <div className="flex flex-col gap-5 animate-pulse">
+      <div className="flex items-center justify-between border-b border-border pb-4">
+        <div className="h-3 w-64 bg-muted" />
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-36 bg-muted" />
+          <div className="h-8 w-32 bg-muted" />
         </div>
-      ))}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {[...Array(2)].map((_, i) => (
+          <div
+            key={i}
+            className="border border-border bg-card flex flex-col gap-3 p-5"
+          >
+            <div className="flex flex-col gap-2">
+              <div className="h-4 w-32 bg-muted" />
+              <div className="h-2 w-24 bg-muted" />
+            </div>
+            <div className="flex flex-col gap-2 pt-2">
+              {[...Array(3)].map((__, j) => (
+                <div key={j} className="flex items-center gap-3">
+                  <div className="h-7 w-7 rounded-full bg-muted" />
+                  <div className="flex flex-col gap-1.5 flex-1">
+                    <div className="h-2 w-24 bg-muted" />
+                    <div className="h-2 w-40 bg-muted" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

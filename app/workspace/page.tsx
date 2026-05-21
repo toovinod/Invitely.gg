@@ -2,12 +2,11 @@ import { WorkspaceCreateDialog } from "@/components/workspace/workspace-create-d
 import { WorkspaceList } from "@/components/workspace/workspace-list";
 import { WorkspaceListSkeleton } from "@/components/skeletons";
 import { getSession } from "@/lib/auth/client/get-session";
-import { Separator } from "@/components/ui/separator";
 import { WorkspaceWithMembers } from "@/lib/types";
+import { ArrowUpRight, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db/prisma";
-import { Plus } from "lucide-react";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -16,12 +15,18 @@ export const metadata: Metadata = {
   title: "Workspaces | Invitely.gg",
 };
 
+const MAX_WORKSPACES = 5;
+
 function PageHeader() {
   return (
-    <div className="flex items-center justify-between gap-4">
-      <h1 className="font-mono text-base font-semibold text-foreground">
+    <div className="flex flex-col gap-1.5">
+      <h1 className="font-sans text-2xl font-semibold tracking-tight text-foreground">
         Workspaces
       </h1>
+      <p className="font-sans text-sm text-muted-foreground">
+        Group your contacts by relationship family, work, friends and send
+        invitations at scale.
+      </p>
     </div>
   );
 }
@@ -42,12 +47,27 @@ async function WorkspaceSection() {
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between gap-4">
-        <p className="font-mono text-xs text-muted-foreground">
-          {workspaces.length === 0
-            ? "Create a workspace to start organising contacts."
-            : `${workspaces.length}/5 workspaces · ${totalMembers} contact${totalMembers === 1 ? "" : "s"}`}
+    <div className="flex flex-col gap-5">
+      <div className="flex items-center justify-between gap-3 flex-wrap border-b border-border pb-4">
+        <p className="font-sans text-sm text-muted-foreground">
+          {workspaces.length === 0 ? (
+            "Create your first workspace to start organising contacts."
+          ) : (
+            <>
+              <span className="font-mono tabular-nums text-foreground">
+                {workspaces.length}
+              </span>
+              <span className="text-muted-foreground/70">
+                /{MAX_WORKSPACES}
+              </span>{" "}
+              workspaces
+              <span className="mx-2 text-muted-foreground/40">·</span>
+              <span className="font-mono tabular-nums text-foreground">
+                {totalMembers}
+              </span>{" "}
+              {totalMembers === 1 ? "contact" : "contacts"} ready to invite
+            </>
+          )}
         </p>
         <div className="flex items-center gap-2 shrink-0">
           {totalMembers > 0 && (
@@ -55,10 +75,11 @@ async function WorkspaceSection() {
               <Button
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs gap-2 rounded-none cursor-pointer"
+                className="font-sans text-sm gap-1.5 cursor-pointer h-8"
               >
-                <Plus className="h-3 w-3" />
-                New event
+                <Send className="h-3.5 w-3.5" />
+                Send invitations
+                <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
               </Button>
             </Link>
           )}
@@ -73,9 +94,8 @@ async function WorkspaceSection() {
 
 export default function WorkspacePage() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-7">
       <PageHeader />
-      <Separator className="bg-border" />
       <Suspense fallback={<WorkspaceListSkeleton />}>
         <WorkspaceSection />
       </Suspense>

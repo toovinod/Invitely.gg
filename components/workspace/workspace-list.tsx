@@ -1,4 +1,5 @@
 import { WorkspaceCard } from "@/components/workspace/workspace-card";
+import { Users } from "lucide-react";
 
 interface Member {
   id: string;
@@ -21,14 +22,17 @@ interface WorkspaceListProps {
 export function WorkspaceList({ workspaces }: WorkspaceListProps) {
   if (workspaces.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-3">
-        <div className="border border-dashed border-border w-12 h-12 flex items-center justify-center">
-          <span className="font-mono text-lg text-muted-foreground">+</span>
+      <div className="border border-dashed border-border bg-card/40 flex flex-col items-center justify-center py-20 px-6 gap-4 text-center">
+        <div className="rounded-full border border-border bg-muted/40 w-12 h-12 flex items-center justify-center">
+          <Users className="h-5 w-5 text-muted-foreground" />
         </div>
-        <div className="text-center">
-          <p className="font-mono text-sm text-foreground">No workspaces yet</p>
-          <p className="font-mono text-xs text-muted-foreground mt-1">
-            Create your first workspace to start organizing contacts
+        <div className="flex flex-col gap-1.5 max-w-sm">
+          <h3 className="font-sans text-base font-medium text-foreground">
+            No workspaces yet
+          </h3>
+          <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+            Workspaces help you keep contacts organised. Start with one for
+            family or your team — you can create up to five.
           </p>
         </div>
       </div>
@@ -36,7 +40,7 @@ export function WorkspaceList({ workspaces }: WorkspaceListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {workspaces.map((workspace: Workspace) => (
         <WorkspaceCard key={workspace.id} workspace={workspace} />
       ))}

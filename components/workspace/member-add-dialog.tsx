@@ -1,10 +1,10 @@
 "use client";
 
 import { useAddMembers } from "@/app/hooks/use-workspaces";
+import { Plus, Trash2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -46,6 +46,7 @@ export function MemberAddDialog({
 
   const remainingSlots = MAX_MEMBERS - currentMemberCount;
   const isAtLimit = remainingSlots <= 0;
+  const validCount = rows.filter((r) => r.email.trim()).length;
 
   function updateRow(id: string, field: "name" | "email", value: string) {
     setRows((prev) =>
@@ -55,14 +56,16 @@ export function MemberAddDialog({
 
   function addRow() {
     if (rows.length >= remainingSlots) {
-      toast.error(`only ${remainingSlots} slots remaining`);
+      toast.error(
+        `Only ${remainingSlots} slot${remainingSlots === 1 ? "" : "s"} remaining`,
+      );
       return;
     }
     setRows((prev) => [...prev, createRow()]);
   }
 
   function removeRow(id: string) {
-    if (rows.length === 1) return; // always keep at least one row
+    if (rows.length === 1) return;
     setRows((prev) => prev.filter((r) => r.id !== id));
   }
 
@@ -76,7 +79,7 @@ export function MemberAddDialog({
 
     const validRows = rows.filter((r) => r.email.trim());
     if (validRows.length === 0) {
-      toast.error("add at least one email address");
+      toast.error("Add at least one email address");
       return;
     }
 
@@ -85,7 +88,7 @@ export function MemberAddDialog({
       (r) => !emailRegex.test(r.email.trim()),
     );
     if (invalidEmails.length > 0) {
-      toast.error(`invalid email: ${invalidEmails[0].email}`);
+      toast.error(`Invalid email: ${invalidEmails[0].email}`);
       return;
     }
 
@@ -109,67 +112,72 @@ export function MemberAddDialog({
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs gap-2 h-7 cursor-pointer"
+          className="font-sans text-sm gap-1.5 h-8 cursor-pointer"
           disabled={isAtLimit}
-          title={isAtLimit ? "workspace is full (25/25)" : undefined}
+          title={isAtLimit ? "Workspace is full (25/25)" : undefined}
         >
-          <Plus className="h-3 w-3" />
+          <UserPlus className="h-3.5 w-3.5" />
           Add members
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="font-mono sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-mono text-sm">Add members</DialogTitle>
-          <DialogDescription className="font-mono text-xs text-muted-foreground">
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
+          <DialogTitle className="font-sans text-base font-semibold tracking-tight">
+            Add members
+          </DialogTitle>
+          <DialogDescription className="font-sans text-sm text-muted-foreground">
             Adding to{" "}
-            <span className="text-foreground font-semibold">
-              {workspaceName}
+            <span className="text-foreground font-medium">{workspaceName}</span>
+            {" — "}
+            <span className="font-mono text-xs">
+              {currentMemberCount}/{MAX_MEMBERS}
             </span>{" "}
-            — {currentMemberCount}/{MAX_MEMBERS} slots used
+            slots used.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <div className="grid grid-cols-[1fr_1fr_24px] gap-2">
-            <Label className="font-mono text-xs text-muted-foreground">
-              Name (optional)
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-6 py-5">
+          <div className="grid grid-cols-[1fr_1fr_32px] gap-2 px-1">
+            <Label className="font-sans text-xs font-medium text-muted-foreground">
+              Name <span className="text-muted-foreground/60">(optional)</span>
             </Label>
-            <Label className="font-mono text-xs text-muted-foreground">
-              Email *
+            <Label className="font-sans text-xs font-medium text-muted-foreground">
+              Email <span className="text-destructive">*</span>
             </Label>
             <div />
           </div>
 
-          <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
+          <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1 -mr-1">
             {rows.map((row: MemberRow) => (
               <div
                 key={row.id}
-                className="grid grid-cols-[1fr_1fr_24px] gap-2 items-center"
+                className="grid grid-cols-[1fr_1fr_32px] gap-2 items-center"
               >
                 <Input
                   placeholder="Shambavi"
                   value={row.name}
                   onChange={(e) => updateRow(row.id, "name", e.target.value)}
-                  className="font-mono text-xs h-8"
+                  className="font-sans text-sm h-9 px-3"
                 />
                 <Input
                   placeholder="shambavi@gmail.com"
                   type="email"
                   value={row.email}
                   onChange={(e) => updateRow(row.id, "email", e.target.value)}
-                  className="font-mono text-xs h-8"
+                  className="font-mono text-sm h-9 px-3"
                   required
                 />
                 <Button
                   type="button"
                   variant="ghost"
-                  size="sm"
-                  className="h-7 w-6 p-0 text-muted-foreground hover:text-destructive cursor-pointer"
+                  size="icon-sm"
+                  className="h-9 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer disabled:opacity-30"
                   onClick={() => removeRow(row.id)}
                   disabled={rows.length === 1}
+                  aria-label="Remove row"
                 >
-                  <Trash2 className="h-3 w-3" />
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </div>
             ))}
@@ -180,20 +188,20 @@ export function MemberAddDialog({
               type="button"
               variant="ghost"
               size="sm"
-              className="font-mono text-xs gap-2 self-start h-7 text-muted-foreground cursor-pointer"
+              className="font-sans text-sm gap-1.5 self-start h-8 text-muted-foreground hover:text-foreground cursor-pointer"
               onClick={addRow}
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-3.5 w-3.5" />
               Add another
             </Button>
           )}
 
-          <DialogFooter className="pt-2">
+          <DialogFooter className="pt-2 gap-2 sm:gap-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm h-9 cursor-pointer"
               onClick={handleClose}
               disabled={isLoading}
             >
@@ -202,12 +210,12 @@ export function MemberAddDialog({
             <Button
               type="submit"
               size="sm"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm h-9 cursor-pointer"
               disabled={isLoading}
             >
               {isLoading
                 ? "Adding..."
-                : `Add ${rows.filter((r) => r.email.trim()).length || ""} member${rows.filter((r) => r.email.trim()).length === 1 ? "" : "s"}`}
+                : `Add ${validCount || ""} member${validCount === 1 ? "" : "s"}`.trim()}
             </Button>
           </DialogFooter>
         </form>

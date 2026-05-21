@@ -1,7 +1,9 @@
 import { WorkspaceDeleteDialog } from "@/components/workspace/workspace-delete-dialog";
 import { MemberAddDialog } from "@/components/workspace/member-add-dialog";
 import { MemberList } from "@/components/workspace/member-list";
-import { Badge } from "@/components/ui/badge";
+import { Send, ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface Member {
   id: string;
@@ -26,39 +28,54 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   const isAtLimit = memberCount >= MAX_MEMBERS;
 
   return (
-    <div className="border border-border bg-card flex flex-col">
-      <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
-        <div className="flex items-center gap-2 min-w-0">
-          <h3 className="font-mono text-xs font-semibold text-foreground truncate">
+    <div className="border border-border bg-card flex flex-col overflow-hidden transition-colors hover:border-foreground/20">
+      <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-4">
+        <div className="flex flex-col gap-1.5 min-w-0">
+          <h3 className="font-sans text-base font-semibold text-foreground tracking-tight truncate">
             {workspace.name}
           </h3>
-          <Badge
-            variant="outline"
-            className={`font-mono text-[10px] px-1.5 py-0 h-4 rounded-none tabular-nums ${
-              isAtLimit
-                ? "text-destructive border-destructive/30 bg-destructive/5"
-                : "text-muted-foreground border-border bg-transparent"
+          <span
+            className={`font-mono text-xs tabular-nums ${
+              isAtLimit ? "text-destructive" : "text-muted-foreground"
             }`}
           >
-            {memberCount}/{MAX_MEMBERS}
-          </Badge>
+            {memberCount}/{MAX_MEMBERS} members
+          </span>
         </div>
 
-        <div className="flex items-center gap-1 shrink-0">
-          <MemberAddDialog
-            workspaceId={workspace.id}
-            workspaceName={workspace.name}
-            currentMemberCount={memberCount}
-          />
-          <WorkspaceDeleteDialog
-            workspaceId={workspace.id}
-            workspaceName={workspace.name}
-          />
-        </div>
+        <WorkspaceDeleteDialog
+          workspaceId={workspace.id}
+          workspaceName={workspace.name}
+        />
       </div>
 
-      <div className="px-4 py-1 flex-1">
+      <div className="border-t border-border bg-background/50 px-5 py-1 flex-1 min-h-16">
         <MemberList members={workspace.members} workspaceId={workspace.id} />
+      </div>
+
+      <div className="border-t border-border px-5 py-3 flex items-center justify-between gap-2 bg-card">
+        <MemberAddDialog
+          workspaceId={workspace.id}
+          workspaceName={workspace.name}
+          currentMemberCount={memberCount}
+        />
+        {memberCount > 0 ? (
+          <Link href="/events/new">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="font-sans text-sm gap-1.5 h-8 text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              <Send className="h-3.5 w-3.5" />
+              Send invitations
+              <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
+            </Button>
+          </Link>
+        ) : (
+          <span className="font-sans text-xs text-muted-foreground italic">
+            Add a member to start sending
+          </span>
+        )}
       </div>
     </div>
   );
