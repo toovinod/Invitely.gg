@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+
 interface ReminderButtonProps {
   eventId: string;
   pendingCount: number;
@@ -36,11 +37,11 @@ export function ReminderButton({ eventId, pendingCount }: ReminderButtonProps) {
     <Button
       variant="outline"
       size="sm"
-      className="font-mono text-xs gap-2 cursor-pointer"
+      className="font-sans text-sm gap-1.5 h-8 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
       onClick={handleReminder}
       disabled={isLoading}
     >
-      <Send className="h-3 w-3" />
+      <Send className="h-3.5 w-3.5" />
       {isLoading ? "Sending..." : `Remind ${pendingCount} pending`}
     </Button>
   );

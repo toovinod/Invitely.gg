@@ -1,7 +1,5 @@
 "use client";
-import { Sparkles, FileText, ChevronDown, BookmarkPlus } from "lucide-react";
 import { EventCreationState } from "@/app/hooks/use-event-creation";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +19,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import {
+  Sparkles,
+  FileText,
+  ChevronDown,
+  BookmarkPlus,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
 
 interface Template {
   id: string;
@@ -39,6 +45,11 @@ interface StepWriteInviteProps {
   onBack: () => void;
   onPolish: (casualText: string) => Promise<void>;
 }
+
+const inputClass =
+  "font-sans text-sm h-10 px-3 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5";
+const textareaClass =
+  "font-sans text-sm resize-none px-3 py-2.5 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5";
 
 export function StepWriteInvite({
   state,
@@ -70,13 +81,13 @@ export function StepWriteInvite({
       const res = await fetch("/api/templates");
       const data = await res.json();
       if (!data.success) {
-        toast.error("failed to load templates");
+        toast.error("Failed to load templates");
         return;
       }
       setTemplates(data.data);
       setTemplatesLoaded(true);
     } catch {
-      toast.error("failed to load templates");
+      toast.error("Failed to load templates");
     } finally {
       setIsLoadingTemplates(false);
     }
@@ -85,7 +96,7 @@ export function StepWriteInvite({
   function handleUseTemplate(template: Template) {
     setField("emailSubject", template.emailSubject);
     setField("emailBody", template.emailBody);
-    toast.success(`template "${template.name}" applied`);
+    toast.success(`Template"${template.name}" applied`);
   }
 
   async function handleSaveTemplate() {
@@ -106,12 +117,12 @@ export function StepWriteInvite({
         toast.error(data.message);
         return;
       }
-      toast.success(`template "${templateName}" saved`);
+      toast.success(`Template"${templateName}" saved`);
       setSaveDialogOpen(false);
       setTemplateName("");
       setTemplatesLoaded(false);
     } catch {
-      toast.error("failed to save template");
+      toast.error("Failed to save template");
     } finally {
       setIsSaving(false);
     }
@@ -119,15 +130,15 @@ export function StepWriteInvite({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="border border-dashed border-border p-4 flex flex-col gap-3">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <p className="font-mono text-xs font-semibold text-foreground flex items-center gap-2">
-              <Sparkles className="h-3 w-3" />
+      <div className="relative overflow-hidden border border-white/8 bg-white/2 p-4 sm:p-5 flex flex-col gap-3.5">
+        <div className="relative flex items-start justify-between gap-3 flex-wrap">
+          <div className="flex flex-col gap-1 min-w-0">
+            <p className="font-sans text-sm font-semibold text-foreground flex items-center gap-2">
+              <Sparkles className="h-3.5 w-3.5 text-muted-foreground" />
               Improve with AI
             </p>
-            <p className="font-mono text-xs text-muted-foreground">
-              Write in casual tone, AI will turn it into a proper invite
+            <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+              Write in a casual tone AI will turn it into a polished invite.
             </p>
           </div>
 
@@ -141,18 +152,18 @@ export function StepWriteInvite({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs gap-2 shrink-0 cursor-pointer"
+                className="font-sans text-sm gap-1.5 h-8 shrink-0 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
               >
-                <FileText className="h-3 w-3" />
+                <FileText className="h-3.5 w-3.5" />
                 Use template
-                <ChevronDown className="h-3 w-3" />
+                <ChevronDown className="h-3.5 w-3.5 opacity-60" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               {isLoadingTemplates && (
                 <DropdownMenuItem
                   disabled
-                  className="font-mono text-xs text-muted-foreground"
+                  className="font-sans text-sm text-muted-foreground"
                 >
                   Loading...
                 </DropdownMenuItem>
@@ -160,7 +171,7 @@ export function StepWriteInvite({
               {!isLoadingTemplates && templates.length === 0 && (
                 <DropdownMenuItem
                   disabled
-                  className="font-mono text-xs text-muted-foreground"
+                  className="font-sans text-sm text-muted-foreground"
                 >
                   No templates saved yet
                 </DropdownMenuItem>
@@ -169,18 +180,18 @@ export function StepWriteInvite({
                 <>
                   <DropdownMenuItem
                     disabled
-                    className="font-mono text-xs text-muted-foreground"
+                    className="font-sans text-xs text-muted-foreground uppercase tracking-wider"
                   >
                     Select a template
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-white/6" />
                   {templates.map((template) => (
                     <DropdownMenuItem
                       key={template.id}
-                      className="font-mono text-xs cursor-pointer"
+                      className="font-sans text-sm cursor-pointer"
                       onClick={() => handleUseTemplate(template)}
                     >
-                      <FileText className="h-3 w-3 mr-2 text-muted-foreground" />
+                      <FileText className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                       {template.name}
                     </DropdownMenuItem>
                   ))}
@@ -191,10 +202,10 @@ export function StepWriteInvite({
         </div>
 
         <Textarea
-          placeholder={`e.g. "bro it's my bday come party with us saturday night, gonna be lit"`}
+          placeholder={`e.g."bro it's my bday come party with us saturday night, gonna be lit"`}
           value={casualText}
           onChange={(e) => setCasualText(e.target.value)}
-          className="font-mono text-xs min-h-16 resize-none"
+          className={`${textareaClass} min-h-20`}
           maxLength={1000}
         />
 
@@ -202,52 +213,58 @@ export function StepWriteInvite({
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs gap-2 self-start cursor-pointer"
+          className="font-sans text-sm gap-1.5 self-start h-8 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
           onClick={handlePolish}
           disabled={!casualText.trim() || state.isPolishing}
         >
-          <Sparkles className="h-3 w-3 cursor-pointer" />
+          <Sparkles className="h-3.5 w-3.5" />
           {state.isPolishing ? "Optimizing..." : "Optimize"}
         </Button>
       </div>
 
       <div className="flex items-center gap-3">
-        <Separator className="flex-1 bg-border" />
-        <span className="font-mono text-xs text-muted-foreground">
+        <div className="h-px flex-1 bg-white/6" />
+        <span className="font-sans text-xs text-muted-foreground">
           or write manually
         </span>
-        <Separator className="flex-1 bg-border" />
+        <div className="h-px flex-1 bg-white/6" />
       </div>
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="email-subject" className="font-mono text-xs">
-            Email subject *
+          <Label
+            htmlFor="email-subject"
+            className="font-sans text-sm font-medium text-foreground"
+          >
+            Email subject <span className="text-destructive">*</span>
           </Label>
           <Input
             id="email-subject"
-            placeholder="You're invited to Shambavi's Birthday Party 🎉"
+            placeholder="You're invited to Shambavi's Birthday Party"
             value={state.emailSubject}
             onChange={(e) => setField("emailSubject", e.target.value)}
-            className="font-mono text-sm h-9"
+            className={inputClass}
             maxLength={150}
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="email-body" className="font-mono text-xs">
-            Email body *
+          <Label
+            htmlFor="email-body"
+            className="font-sans text-sm font-medium text-foreground"
+          >
+            Email body <span className="text-destructive">*</span>
           </Label>
           <Textarea
             id="email-body"
             placeholder="Write your invite message here..."
             value={state.emailBody}
             onChange={(e) => setField("emailBody", e.target.value)}
-            className="font-mono text-sm min-h-40 resize-none"
+            className={`${textareaClass} min-h-44`}
             maxLength={5000}
           />
-          <p className="font-mono text-xs text-muted-foreground">
-            Do not include greeting or sign-off the email template handles that.
+          <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+            Skip the greeting and sign-off the email template handles those.
           </p>
         </div>
       </div>
@@ -258,33 +275,35 @@ export function StepWriteInvite({
             type="button"
             variant="outline"
             size="sm"
-            className="font-mono text-xs gap-2 cursor-pointer"
+            className="font-sans text-sm gap-1.5 h-8 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
             onClick={() => setSaveDialogOpen(true)}
           >
-            <BookmarkPlus className="h-3 w-3" />
+            <BookmarkPlus className="h-3.5 w-3.5" />
             Save as template
           </Button>
         </div>
       )}
 
-      <div className="flex justify-between pt-2">
+      <div className="flex justify-between pt-2 gap-2">
         <Button
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs cursor-pointer"
+          className="font-sans text-sm h-9 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
           onClick={onBack}
         >
-          ← Back
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Back
         </Button>
         <Button
           type="button"
           size="sm"
-          className="font-mono text-xs cursor-pointer"
+          className="font-sans text-sm h-9 gap-1.5 cursor-pointer"
           onClick={onNext}
           disabled={!isValid}
         >
-          Next →
+          Continue
+          <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </div>
 
@@ -295,38 +314,43 @@ export function StepWriteInvite({
           if (!val) setTemplateName("");
         }}
       >
-        <DialogContent className="font-mono sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="font-mono text-sm">
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+          <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+            <DialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
               Save as template
             </DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col gap-4 pt-2">
+          <div className="flex flex-col gap-4 px-5 sm:px-6 py-5">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="template-name" className="font-mono text-xs">
-                Template name *
+              <Label
+                htmlFor="template-name"
+                className="font-sans text-sm font-medium text-foreground"
+              >
+                Template name <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="template-name"
                 placeholder="Birthday Party"
                 value={templateName}
                 onChange={(e) => setTemplateName(e.target.value)}
-                className="font-mono text-sm h-9"
+                className={inputClass}
                 maxLength={100}
                 autoFocus
               />
             </div>
-            <div className="border border-border px-3 py-2.5 flex flex-col gap-1">
-              <p className="font-mono text-xs text-muted-foreground">Subject</p>
-              <p className="font-mono text-xs text-foreground truncate">
+            <div className="border border-white/8 bg-transparent px-3 py-2.5 flex flex-col gap-1">
+              <p className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider">
+                Subject preview
+              </p>
+              <p className="font-sans text-sm text-foreground truncate">
                 {state.emailSubject}
               </p>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-1">
               <Button
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs cursor-pointer"
+                className="font-sans text-sm h-9 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
                 onClick={() => setSaveDialogOpen(false)}
                 disabled={isSaving}
               >
@@ -334,7 +358,7 @@ export function StepWriteInvite({
               </Button>
               <Button
                 size="sm"
-                className="font-mono text-xs cursor-pointer"
+                className="font-sans text-sm h-9 cursor-pointer"
                 onClick={handleSaveTemplate}
                 disabled={!templateName.trim() || isSaving}
               >

@@ -27,11 +27,11 @@ export function RangeFilter({ current }: RangeFilterProps) {
 
   return (
     <div
-      className="inline-flex border border-border"
+      className="inline-flex border border-white/8 overflow-hidden"
       role="group"
       aria-label="Analytics range"
     >
-      {ANALYTICS_RANGES.map((range) => {
+      {ANALYTICS_RANGES.map((range, idx) => {
         const active = range === current;
         return (
           <button
@@ -39,10 +39,12 @@ export function RangeFilter({ current }: RangeFilterProps) {
             type="button"
             onClick={() => setRange(range)}
             aria-pressed={active}
-            className={`font-mono text-[11px] h-8 px-3 transition-colors cursor-pointer ${
+            className={`font-sans text-xs h-8 px-3 transition-colors cursor-pointer ${
+              idx > 0 ? "border-l border-white/8" : ""
+            } ${
               active
                 ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-white/4"
             }`}
           >
             {labels[range]}

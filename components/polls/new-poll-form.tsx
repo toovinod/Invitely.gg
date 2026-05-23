@@ -4,7 +4,6 @@ import {
   RecipientEntry,
   WorkspaceRecipientPicker,
 } from "@/components/shared/workspace-recipient-picker";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { POLL_LIMITS } from "@/lib/polls/types";
 import { Button } from "@/components/ui/button";
@@ -181,15 +180,18 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       <section className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="poll-title" className="font-mono text-xs">
-            Poll title *
+          <Label
+            htmlFor="poll-title"
+            className="font-sans text-sm font-medium text-foreground"
+          >
+            Poll title <span className="text-destructive">*</span>
           </Label>
           <Input
             id="poll-title"
             placeholder="Q4 team dinner"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="font-mono text-sm h-9"
+            className="font-sans text-sm h-10 px-3 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
             maxLength={150}
             required
             autoFocus
@@ -197,40 +199,55 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="poll-desc" className="font-mono text-xs">
-            Context (optional)
+          <Label
+            htmlFor="poll-desc"
+            className="font-sans text-sm font-medium text-foreground"
+          >
+            Context{" "}
+            <span className="text-muted-foreground/60 font-normal">
+              (optional)
+            </span>
           </Label>
           <Textarea
             id="poll-desc"
             placeholder="A short message your invitees will see when they vote"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="font-mono text-sm min-h-20 resize-none"
+            className="font-sans text-sm min-h-20 px-3 py-2 resize-none border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
             maxLength={1000}
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="poll-location" className="font-mono text-xs">
-            Location (optional)
+          <Label
+            htmlFor="poll-location"
+            className="font-sans text-sm font-medium text-foreground"
+          >
+            Location{" "}
+            <span className="text-muted-foreground/60 font-normal">
+              (optional)
+            </span>
           </Label>
           <Input
             id="poll-location"
             placeholder="The Wine Bar, downtown"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="font-mono text-sm h-9"
+            className="font-sans text-sm h-10 px-3 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
             maxLength={200}
           />
         </div>
       </section>
 
-      <Separator className="bg-border" />
+      <div className="h-px bg-white/6" />
 
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-3">
-          <Label className="font-mono text-xs">
-            Time slots * ({filledOptions.length}/{POLL_LIMITS.MAX_OPTIONS})
+          <Label className="font-sans text-sm font-medium text-foreground">
+            Time slots <span className="text-destructive">*</span>{" "}
+            <span className="font-mono text-xs tabular-nums text-muted-foreground font-normal">
+              ({filledOptions.length}/{POLL_LIMITS.MAX_OPTIONS})
+            </span>
           </Label>
           <Button
             type="button"
@@ -238,9 +255,9 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
             size="sm"
             onClick={addOption}
             disabled={options.length >= POLL_LIMITS.MAX_OPTIONS}
-            className="font-mono text-xs h-7 gap-1.5 rounded-none cursor-pointer"
+            className="font-sans text-sm h-8 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
           >
-            <Plus className="h-3 w-3" />
+            <Plus className="h-3.5 w-3.5" />
             Add slot
           </Button>
         </div>
@@ -248,7 +265,7 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
           {options.map((option, idx) => (
             <div
               key={option.id}
-              className="flex items-center gap-2 border border-border bg-card px-3 py-2"
+              className="flex items-center gap-2 border border-white/8 bg-white/2 px-3 py-2"
             >
               <span className="font-mono text-[10px] text-muted-foreground tabular-nums w-5 shrink-0">
                 {String(idx + 1).padStart(2, "0")}
@@ -258,7 +275,7 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
                 value={option.startAt}
                 min={minDateTime}
                 onChange={(e) => setOption(option.id, e.target.value)}
-                className="font-mono text-sm h-8 flex-1"
+                className="font-mono text-sm h-9 flex-1 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
                 required
               />
               {options.length > POLL_LIMITS.MIN_OPTIONS && (
@@ -267,27 +284,33 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
                   variant="ghost"
                   size="icon"
                   onClick={() => removeOption(option.id)}
-                  className="h-7 w-7 rounded-none cursor-pointer text-muted-foreground hover:text-destructive"
+                  className="h-8 w-8 cursor-pointer text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                   aria-label="Remove slot"
                 >
-                  <Trash2 className="h-3 w-3" />
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               )}
             </div>
           ))}
         </div>
-        <p className="font-mono text-[10px] text-muted-foreground">
-          Voting auto-closes {POLL_LIMITS.AUTO_CLOSE_HOURS_BEFORE_FIRST_SLOT}h
+        <p className="font-sans text-xs text-muted-foreground">
+          Voting auto-closes{" "}
+          <span className="font-mono tabular-nums text-foreground">
+            {POLL_LIMITS.AUTO_CLOSE_HOURS_BEFORE_FIRST_SLOT}h
+          </span>{" "}
           before your first slot
           {projectedCloseLabel ? ` — ${projectedCloseLabel}.` : "."}
         </p>
       </section>
 
-      <Separator className="bg-border" />
+      <div className="h-px bg-white/6" />
 
       <section className="flex flex-col gap-3">
-        <Label className="font-mono text-xs">
-          Invitees * ({selected.size}/{POLL_LIMITS.MAX_INVITEES})
+        <Label className="font-sans text-sm font-medium text-foreground">
+          Invitees <span className="text-destructive">*</span>{" "}
+          <span className="font-mono text-xs tabular-nums text-muted-foreground font-normal">
+            ({selected.size}/{POLL_LIMITS.MAX_INVITEES})
+          </span>
         </Label>
         <WorkspaceRecipientPicker
           workspaces={workspaces}
@@ -298,15 +321,15 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
         />
       </section>
 
-      <Separator className="bg-border" />
+      <div className="h-px bg-white/6" />
 
       <div className="flex items-center justify-end gap-2">
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => router.push("/polls")}
-          className="font-mono text-xs h-9 rounded-none cursor-pointer"
+          className="font-sans text-sm h-9 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
         >
           Cancel
         </Button>
@@ -314,7 +337,7 @@ export function NewPollForm({ workspaces }: NewPollFormProps) {
           type="submit"
           size="sm"
           disabled={!isValid || isSubmitting}
-          className="font-mono text-xs h-9 rounded-none cursor-pointer"
+          className="font-sans text-sm h-9 cursor-pointer"
         >
           {isSubmitting
             ? "Sending..."

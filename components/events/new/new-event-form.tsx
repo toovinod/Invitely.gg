@@ -6,7 +6,6 @@ import { StepWriteInvite } from "@/components/events/new/step-write-invite";
 import { StepPreviewSend } from "@/components/events/new/step-preview-send";
 import { EventStepper } from "@/components/events/new/event-stepper";
 import { useEventCreation } from "@/app/hooks/use-event-creation";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -35,6 +34,13 @@ const stepTitles: Record<number, string> = {
   4: "Preview & send",
 };
 
+const stepHints: Record<number, string> = {
+  1: "When, where, and how often.",
+  2: "Compose the message your guests will receive.",
+  3: "Choose who gets invited from your workspaces.",
+  4: "Review everything before sending — or schedule a smart send.",
+};
+
 export function NewEventForm({
   workspaces,
   organizerName,
@@ -55,12 +61,12 @@ export function NewEventForm({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 border-b border-white/8 pb-4">
         <EventStepper currentStep={state.currentStep} />
         <Button
           variant="ghost"
           size="sm"
-          className="font-mono text-xs text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
+          className="font-sans text-sm h-8 text-muted-foreground hover:text-foreground hover:bg-white/4 shrink-0 cursor-pointer"
           onClick={() => router.push("/events")}
           disabled={state.isSending}
         >
@@ -68,11 +74,17 @@ export function NewEventForm({
         </Button>
       </div>
 
-      <Separator className="bg-border" />
-
-      <p className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-        Step {state.currentStep} — {stepTitles[state.currentStep]}
-      </p>
+      <div className="flex flex-col gap-1">
+        <p className="font-sans text-[11px] font-medium text-muted-foreground uppercase tracking-[0.18em]">
+          Step {state.currentStep} of 4
+        </p>
+        <h2 className="font-sans text-lg font-semibold tracking-tight text-foreground">
+          {stepTitles[state.currentStep]}
+        </h2>
+        <p className="font-sans text-sm text-muted-foreground">
+          {stepHints[state.currentStep]}
+        </p>
+      </div>
 
       {state.currentStep === 1 && (
         <StepEventDetails state={state} setField={setField} onNext={nextStep} />

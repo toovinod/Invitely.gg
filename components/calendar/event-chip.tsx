@@ -27,7 +27,7 @@ export function EventChip({ event, variant = "month" }: EventChipProps) {
     return (
       <Link
         href={`/events/${event.id}`}
-        className={`group flex items-center gap-3 border border-border px-3 py-2.5 hover:border-foreground/30 transition-colors ${
+        className={`group flex items-center gap-3 border border-white/8 bg-white/2 px-3 py-2.5 transition-all duration-300 hover:border-white/15 hover:bg-white/4 ${
           isCancelled ? "opacity-50" : ""
         }`}
       >
@@ -36,7 +36,7 @@ export function EventChip({ event, variant = "month" }: EventChipProps) {
           {time}
         </span>
         <span
-          className={`font-mono text-xs text-foreground truncate flex-1 group-hover:underline underline-offset-4 ${
+          className={`font-sans text-sm text-foreground truncate flex-1 group-hover:underline underline-offset-4 decoration-white/30 ${
             isCancelled ? "line-through" : ""
           }`}
         >
@@ -45,7 +45,7 @@ export function EventChip({ event, variant = "month" }: EventChipProps) {
         {event.recurrence && (
           <RefreshCw className="h-3 w-3 text-muted-foreground shrink-0" />
         )}
-        <span className="font-mono text-[10px] text-muted-foreground truncate hidden sm:block max-w-[40%]">
+        <span className="font-sans text-xs text-muted-foreground truncate hidden sm:block max-w-[40%]">
           {event.location}
         </span>
       </Link>
@@ -55,7 +55,7 @@ export function EventChip({ event, variant = "month" }: EventChipProps) {
   return (
     <Link
       href={`/events/${event.id}`}
-      className={`flex items-center gap-1.5 px-1.5 py-0.5 hover:bg-muted/60 transition-colors min-w-0 ${
+      className={`flex items-center gap-1.5 px-1.5 py-0.5 hover:bg-white/4 transition-colors min-w-0 ${
         isCancelled ? "opacity-50" : ""
       }`}
       title={`${event.name} · ${time}`}
@@ -65,7 +65,7 @@ export function EventChip({ event, variant = "month" }: EventChipProps) {
         {time}
       </span>
       <span
-        className={`font-mono text-[10px] text-foreground truncate min-w-0 ${
+        className={`font-sans text-[11px] text-foreground truncate min-w-0 ${
           isCancelled ? "line-through" : ""
         }`}
       >

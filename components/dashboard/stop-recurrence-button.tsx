@@ -49,7 +49,7 @@ export function StopRecurrenceButton({
       setOpen(false);
       router.refresh();
     } catch {
-      toast.error("failed to stop recurrence");
+      toast.error("Failed to stop recurrence");
     } finally {
       setIsLoading(false);
     }
@@ -61,48 +61,46 @@ export function StopRecurrenceButton({
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs h-8 gap-2 text-muted-foreground hover:text-foreground cursor-pointer"
+          className="font-sans text-sm h-8 gap-1.5 border-white/8 text-muted-foreground hover:text-foreground hover:border-white/15 hover:bg-white/4 cursor-pointer"
         >
-          <RefreshCw className="h-3 w-3" />
+          <RefreshCw className="h-3.5 w-3.5" />
           Stop repeating
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="font-mono sm:max-w-sm">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="font-mono text-sm">
+      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <AlertDialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <AlertDialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Stop recurring event
           </AlertDialogTitle>
-          <AlertDialogDescription className="font-mono text-xs text-muted-foreground">
+          <AlertDialogDescription className="font-sans text-sm text-muted-foreground">
             This event repeats{" "}
-            <span className="text-foreground font-semibold">{recurrence}</span>.
+            <span className="text-foreground font-medium">{recurrence}</span>.
             {futureCount > 0 && (
               <>
                 {" "}
                 There {futureCount === 1 ? "is" : "are"}{" "}
-                <span className="text-foreground font-semibold">
-                  {futureCount} future event
-                  {futureCount === 1 ? "" : "s"}
-                </span>{" "}
-                already created.
+                <span className="font-mono text-foreground">{futureCount}</span>{" "}
+                future event{futureCount === 1 ? "" : "s"} already created.
               </>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         {futureCount > 0 && (
-          <div className="flex flex-col gap-2 py-2">
+          <div className="flex flex-col gap-2 px-5 sm:px-6 py-4">
             <button
               type="button"
               onClick={() => setCancelFuture(false)}
-              className={`font-mono text-xs px-3 py-2.5 border text-left transition-colors ${
+              className={`font-sans text-sm px-3.5 py-3 border text-left transition-colors cursor-pointer ${
                 !cancelFuture
-                  ? "border-foreground bg-foreground/5 text-foreground"
-                  : "border-border text-muted-foreground hover:border-foreground/30"
+                  ? "border-white/15 bg-white/4 text-foreground"
+                  : "border-white/8 bg-transparent text-muted-foreground hover:border-white/15 hover:bg-white/2"
               }`}
             >
-              <span className="font-semibold">Stop future repeats only</span>
-              <br />
-              <span className="text-muted-foreground">
+              <span className="font-medium block">
+                Stop future repeats only
+              </span>
+              <span className="text-muted-foreground text-xs leading-relaxed">
                 Keep the {futureCount} already created event
                 {futureCount === 1 ? "" : "s"}
               </span>
@@ -110,17 +108,16 @@ export function StopRecurrenceButton({
             <button
               type="button"
               onClick={() => setCancelFuture(true)}
-              className={`font-mono text-xs px-3 py-2.5 border text-left transition-colors ${
+              className={`font-sans text-sm px-3.5 py-3 border text-left transition-colors cursor-pointer ${
                 cancelFuture
-                  ? "border-destructive bg-destructive/5 text-foreground"
-                  : "border-border text-muted-foreground hover:border-destructive/30"
+                  ? "border-destructive/40 bg-destructive/10 text-foreground"
+                  : "border-white/8 bg-transparent text-muted-foreground hover:border-destructive/30 hover:bg-destructive/5"
               }`}
             >
-              <span className="font-semibold">
+              <span className="font-medium block">
                 Stop and cancel all upcoming
               </span>
-              <br />
-              <span className="text-muted-foreground">
+              <span className="text-muted-foreground text-xs leading-relaxed">
                 Cancel the {futureCount} future event
                 {futureCount === 1 ? "" : "s"} too
               </span>
@@ -128,14 +125,14 @@ export function StopRecurrenceButton({
           </div>
         )}
 
-        <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
+        <AlertDialogFooter className="px-5 sm:px-6 py-4 gap-2 border-t border-white/6">
+          <AlertDialogCancel className="font-sans text-sm h-9 cursor-pointer mt-0 border-white/8 hover:border-white/15 hover:bg-white/4">
             Keep repeating
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleStop}
             disabled={isLoading}
-            className={`font-mono text-xs h-8 cursor-pointer ${
+            className={`font-sans text-sm h-9 cursor-pointer ${
               cancelFuture
                 ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 : ""

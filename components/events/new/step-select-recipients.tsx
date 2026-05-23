@@ -1,5 +1,6 @@
 "use client";
 import { WorkspaceRecipientPicker } from "@/components/shared/workspace-recipient-picker";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   EventCreationState,
@@ -40,24 +41,29 @@ export function StepSelectRecipients({
         onToggleWorkspace={onToggleWorkspace}
       />
 
-      <div className="flex justify-between pt-2">
+      <div className="flex justify-between pt-2 gap-2">
         <Button
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs cursor-pointer"
+          className="font-sans text-sm h-9 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
           onClick={onBack}
         >
-          ← Back
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Back
         </Button>
         <Button
           type="button"
           size="sm"
-          className="font-mono text-xs cursor-pointer"
+          className="font-sans text-sm h-9 gap-1.5 cursor-pointer"
           onClick={onNext}
           disabled={selectedCount === 0}
         >
-          Next → ({selectedCount})
+          Continue
+          <span className="font-mono tabular-nums opacity-80">
+            ({selectedCount})
+          </span>
+          <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </div>
     </div>

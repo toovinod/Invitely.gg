@@ -1,8 +1,6 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Sparkles, Lightbulb, AlertTriangle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -20,24 +18,30 @@ interface InsightsCardProps {
 
 const urgencyConfig = {
   low: {
-    border: "border-blue-500/20",
-    bg: "bg-blue-500/5",
-    text: "text-blue-500",
+    border: "border-white/15",
+    bg: "bg-white/4",
+    text: "text-foreground",
+    iconColor: "text-muted-foreground",
+    Icon: Lightbulb,
     label: "Suggestion",
   },
   medium: {
-    border: "border-yellow-500/20",
-    bg: "bg-yellow-500/5",
-    text: "text-yellow-500",
+    border: "border-white/[0.18]",
+    bg: "bg-white/6",
+    text: "text-foreground",
+    iconColor: "text-foreground",
+    Icon: AlertCircle,
     label: "Action needed",
   },
   high: {
-    border: "border-red-500/20",
-    bg: "bg-red-500/5",
-    text: "text-red-500",
+    border: "border-destructive/40",
+    bg: "bg-destructive/10",
+    text: "text-destructive",
+    iconColor: "text-destructive",
+    Icon: AlertTriangle,
     label: "Urgent",
   },
-};
+} as const;
 
 export function InsightsCard({ eventId }: InsightsCardProps) {
   const [insights, setInsights] = useState<Insights | null>(null);
@@ -60,19 +64,19 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
       setInsights(result.data.insights);
       setGenerated(true);
     } catch {
-      toast.error("failed to generate insights");
+      toast.error("Failed to generate insights");
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <Card className="border-border bg-card">
-      <CardContent className="px-4 py-4 flex flex-col gap-4">
-        <div className="flex items-center justify-between gap-4">
+    <div className="relative overflow-hidden border">
+      <div className="relative px-4 sm:px-5 py-4 flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-3 w-3 text-muted-foreground" />
-            <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+            <Sparkles className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
               AI Insights
             </span>
           </div>
@@ -80,11 +84,11 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
             <Button
               variant="outline"
               size="sm"
-              className="font-mono text-xs h-7 gap-2 cursor-pointer"
+              className="font-sans text-sm h-8 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
               onClick={handleGenerate}
               disabled={isLoading}
             >
-              <Sparkles className="h-3 w-3" />
+              <Sparkles className="h-3.5 w-3.5" />
               {isLoading ? "Analysing..." : "Generate insights"}
             </Button>
           )}
@@ -92,7 +96,7 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="font-mono text-xs h-7 gap-2 text-muted-foreground cursor-pointer"
+              className="font-sans text-sm h-8 gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/4 cursor-pointer"
               onClick={handleGenerate}
               disabled={isLoading}
             >
@@ -102,61 +106,68 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
         </div>
 
         {!generated && !isLoading && (
-          <p className="font-mono text-xs text-muted-foreground">
-            Generate AI powered insights based on your guest responses.
+          <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+            Generate AI-powered insights based on your guest responses.
           </p>
         )}
 
         {isLoading && (
           <div className="flex flex-col gap-3 animate-pulse">
-            <div className="h-2 w-full bg-muted rounded-none" />
-            <div className="h-2 w-3/4 bg-muted rounded-none" />
-            <div className="h-2 w-1/2 bg-muted rounded-none" />
+            <div className="h-2 w-full bg-white/5" />
+            <div className="h-2 w-3/4 bg-white/5" />
+            <div className="h-2 w-1/2 bg-white/5" />
           </div>
         )}
 
         {insights && !isLoading && (
           <div className="flex flex-col gap-4">
-            <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+            <p className="font-sans text-sm text-muted-foreground leading-relaxed">
               {insights.summary}
             </p>
 
-            <Separator className="bg-border" />
+            <div className="h-px bg-white/6" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1 border border-border px-3 py-2.5">
-                <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+              <div className="flex flex-col gap-1 border border-white/8 bg-white/2 px-3.5 py-3">
+                <span className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                   Response rate
                 </span>
-                <span className="font-mono text-2xl font-semibold text-foreground">
+                <span className="font-mono text-2xl font-semibold text-foreground tabular-nums leading-none">
                   {insights.responseRate}%
                 </span>
               </div>
-              <div className="flex flex-col gap-1 border border-border px-3 py-2.5">
-                <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+              <div className="flex flex-col gap-1 border border-white/8 bg-white/2 px-3.5 py-3">
+                <span className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                   Top insight
                 </span>
-                <span className="font-mono text-xs text-foreground leading-relaxed">
+                <span className="font-sans text-sm text-foreground leading-relaxed">
                   {insights.topInsight}
                 </span>
               </div>
             </div>
 
-            <div
-              className={`border ${urgencyConfig[insights.urgency].border} ${urgencyConfig[insights.urgency].bg} px-3 py-2.5 flex flex-col gap-1`}
-            >
-              <span
-                className={`font-mono text-xs uppercase tracking-widest ${urgencyConfig[insights.urgency].text}`}
-              >
-                {urgencyConfig[insights.urgency].label}
-              </span>
-              <span className="font-mono text-xs text-foreground leading-relaxed">
-                {insights.suggestion}
-              </span>
-            </div>
+            {(() => {
+              const cfg = urgencyConfig[insights.urgency];
+              const Icon = cfg.Icon;
+              return (
+                <div
+                  className={`border ${cfg.border} ${cfg.bg} px-3.5 py-3 flex flex-col gap-1`}
+                >
+                  <span
+                    className={`font-sans text-[11px] uppercase tracking-wider font-medium flex items-center gap-1.5 ${cfg.text}`}
+                  >
+                    <Icon className={`h-3 w-3 ${cfg.iconColor}`} />
+                    {cfg.label}
+                  </span>
+                  <span className="font-sans text-sm text-foreground leading-relaxed">
+                    {insights.suggestion}
+                  </span>
+                </div>
+              );
+            })()}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

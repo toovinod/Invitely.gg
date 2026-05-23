@@ -48,25 +48,25 @@ export default async function PublicPollPage({ params }: PollTokenParams) {
 
   return (
     <main className="min-h-svh bg-background">
-      <header className="border-b border-border">
+      <header className="border-b border-white/8">
         <div className="mx-auto max-w-2xl px-6 py-4 flex items-center gap-2">
           <Logo size={16} />
-          <span className="font-mono text-xs font-semibold text-foreground">
+          <span className="font-sans text-sm font-semibold tracking-tight text-foreground">
             Invitely.gg
           </span>
         </div>
       </header>
 
-      <div className="mx-auto max-w-2xl px-6 py-8 flex flex-col gap-6">
+      <div className="mx-auto max-w-2xl px-6 py-10 sm:py-12 flex flex-col gap-7">
         <div className="flex flex-col gap-2">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
             {view.organizerName} wants to find a time
           </span>
-          <h1 className="font-mono text-2xl font-semibold text-foreground tracking-tight">
+          <h1 className="font-sans text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">
             {view.title}
           </h1>
           {view.description && (
-            <p className="font-mono text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
+            <p className="font-sans text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
               {view.description}
             </p>
           )}
@@ -74,17 +74,20 @@ export default async function PublicPollPage({ params }: PollTokenParams) {
           <div className="flex flex-col gap-1.5 pt-2">
             {view.location && (
               <div className="flex items-center gap-2">
-                <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
-                <span className="font-mono text-xs text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+                <span className="font-sans text-sm text-muted-foreground">
                   {view.location}
                 </span>
               </div>
             )}
             {closesLabel && (
               <div className="flex items-center gap-2">
-                <CalendarClock className="h-3 w-3 text-muted-foreground shrink-0" />
-                <span className="font-mono text-xs text-muted-foreground">
-                  Voting closes {closesLabel}
+                <CalendarClock className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+                <span className="font-sans text-sm text-muted-foreground">
+                  Voting closes{" "}
+                  <span className="font-mono text-foreground tabular-nums">
+                    {closesLabel}
+                  </span>
                 </span>
               </div>
             )}

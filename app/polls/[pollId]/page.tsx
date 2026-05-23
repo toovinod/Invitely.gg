@@ -4,11 +4,9 @@ import { PollService } from "@/lib/validations/validate-poll";
 import { PollDetailSkeleton } from "@/components/skeletons";
 import { getSession } from "@/lib/auth/client/get-session";
 import { isInvitelyApiError } from "@/lib/shared/base";
-import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
 import { PollIdParams } from "@/lib/polls/types";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -28,20 +26,29 @@ export async function generateMetadata({
   return { title: `Poll ${pollId.slice(0, 6)} | Invitely.gg` };
 }
 
-const statusBadge = {
-  open: {
-    label: "Open",
-    className: "border-border bg-muted/30 text-foreground",
-  },
-  finalized: {
-    label: "Finalized",
-    className: "border-green-500/20 bg-green-500/5 text-green-500",
-  },
-  cancelled: {
-    label: "Cancelled",
-    className: "border-destructive/20 bg-destructive/5 text-destructive",
-  },
-} as const;
+function StatusPill({
+  label,
+  tone,
+}: {
+  label: string;
+  tone: "default" | "success" | "destructive" | "muted";
+}) {
+  const className =
+    tone === "destructive"
+      ? "border-destructive/30 bg-destructive/10 text-destructive"
+      : tone === "success"
+        ? "border-sky-400/25 bg-sky-400/10 text-sky-400"
+        : tone === "muted"
+          ? "border-white/8 bg-white/3 text-muted-foreground"
+          : "border-white/15 bg-white/6 text-foreground";
+  return (
+    <span
+      className={`inline-flex items-center gap-1 border px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide w-fit ${className}`}
+    >
+      {label}
+    </span>
+  );
+}
 
 export default async function PollDetailPage({ params }: PollIdParams) {
   const { pollId } = await params;
@@ -69,36 +76,50 @@ async function PollDetailBody({ pollId, userId }: PollDetailBodyProps) {
     throw e;
   }
 
-  const cfg = statusBadge[detail.status];
   const isOpen = detail.status === "open";
   const responseRate =
     detail.invitees.length === 0
       ? 0
       : Math.round((detail.responseCount / detail.invitees.length) * 100);
 
+  const tone: "default" | "success" | "destructive" =
+    detail.status === "finalized"
+      ? "success"
+      : detail.status === "cancelled"
+        ? "destructive"
+        : "default";
+  const statusLabel =
+    detail.status === "finalized"
+      ? "finalised"
+      : detail.status === "cancelled"
+        ? "cancelled"
+        : "open";
+
   return (
-    <div className="flex flex-col gap-6">
-      <Button
-        variant="ghost"
-        size="sm"
-        asChild
-        className="font-mono text-xs gap-1.5 -ml-2 h-7 w-fit text-muted-foreground hover:text-foreground rounded-none"
-      >
-        <Link href="/polls">
-          <ArrowLeft className="h-3 w-3" />
-          All polls
+    <div className="flex flex-col gap-6 sm:gap-7">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <Link href="/polls" className="shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            className="font-sans text-sm h-8 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            All polls
+          </Button>
         </Link>
-      </Button>
+        <PollDeleteDialog pollId={detail.id} pollTitle={detail.title} />
+      </div>
 
       {detail.status === "finalized" && detail.finalEventId && (
-        <div className="border border-green-500/20 bg-green-500/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="border border-sky-400/25 bg-sky-400/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3">
-            <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
+            <CheckCircle2 className="h-4 w-4 text-sky-400 shrink-0 mt-0.5" />
             <div className="flex flex-col gap-0.5">
-              <p className="font-mono text-xs font-semibold text-green-500">
-                Locked in — event created
+              <p className="font-sans text-sm font-medium text-sky-400">
+                Locked in event created
               </p>
-              <p className="font-mono text-xs text-muted-foreground">
+              <p className="font-sans text-xs text-muted-foreground">
                 {detail.finalEventName ?? "Your event"} is ready to send.
               </p>
             </div>
@@ -109,53 +130,57 @@ async function PollDetailBody({ pollId, userId }: PollDetailBodyProps) {
           >
             <Button
               size="sm"
-              className="font-mono text-xs h-8 gap-2 rounded-none"
+              className="font-sans text-sm h-8 gap-1.5 cursor-pointer"
             >
-              <CalendarCheck className="h-3 w-3" />
+              <CalendarCheck className="h-3.5 w-3.5" />
               Open event
             </Button>
           </Link>
         </div>
       )}
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div className="flex flex-col gap-2 min-w-0 flex-1">
-          <Badge
-            variant="outline"
-            className={`font-mono text-[10px] w-fit ${cfg.className}`}
-          >
-            {cfg.label}
-          </Badge>
-          <h1 className="font-mono text-base font-semibold text-foreground">
-            {detail.title}
-          </h1>
-          {detail.description && (
-            <p className="font-mono text-xs text-muted-foreground leading-relaxed">
-              {detail.description}
-            </p>
-          )}
+      <div className="flex flex-col gap-2 min-w-0">
+        <StatusPill label={statusLabel} tone={tone} />
+        <h1 className="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+          {detail.title}
+        </h1>
+        {detail.description && (
+          <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-2xl">
+            {detail.description}
+          </p>
+        )}
 
-          <div className="flex flex-col gap-1.5 pt-1">
-            {detail.location && (
-              <div className="flex items-center gap-2">
-                <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
-                <span className="font-mono text-xs text-muted-foreground">
-                  {detail.location}
-                </span>
-              </div>
-            )}
+        <div className="flex flex-col gap-1.5 pt-1">
+          {detail.location && (
             <div className="flex items-center gap-2">
-              <Mail className="h-3 w-3 text-muted-foreground shrink-0" />
-              <span className="font-mono text-xs text-muted-foreground tabular-nums">
-                {detail.responseCount}/{detail.invitees.length} responded ·{" "}
-                {responseRate}%
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+              <span className="font-sans text-sm text-muted-foreground">
+                {detail.location}
               </span>
             </div>
-            {detail.closesAt && (
-              <div className="flex items-center gap-2">
-                <Clock className="h-3 w-3 text-muted-foreground shrink-0" />
-                <span className="font-mono text-xs text-muted-foreground">
-                  Closes{" "}
+          )}
+          <div className="flex items-center gap-2">
+            <Mail className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+            <span className="font-sans text-sm text-muted-foreground">
+              <span className="font-mono tabular-nums text-foreground">
+                {detail.responseCount}
+              </span>
+              /
+              <span className="font-mono tabular-nums text-foreground">
+                {detail.invitees.length}
+              </span>{" "}
+              responded ·{" "}
+              <span className="font-mono tabular-nums text-foreground">
+                {responseRate}%
+              </span>
+            </span>
+          </div>
+          {detail.closesAt && (
+            <div className="flex items-center gap-2">
+              <Clock className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+              <span className="font-sans text-sm text-muted-foreground">
+                Closes{" "}
+                <span className="font-mono tabular-nums text-foreground">
                   {new Date(detail.closesAt).toLocaleDateString("en-US", {
                     weekday: "short",
                     month: "short",
@@ -164,16 +189,13 @@ async function PollDetailBody({ pollId, userId }: PollDetailBodyProps) {
                     minute: "2-digit",
                   })}
                 </span>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <PollDeleteDialog pollId={detail.id} pollTitle={detail.title} />
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      <Separator className="bg-border" />
+      <div className="h-px bg-white/6" />
 
       <PollHostBoard
         pollId={detail.id}
@@ -183,13 +205,19 @@ async function PollDetailBody({ pollId, userId }: PollDetailBodyProps) {
         isOpen={isOpen}
       />
 
-      <Separator className="bg-border" />
+      <div className="h-px bg-white/6" />
 
-      <section className="flex flex-col gap-3">
-        <h2 className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-          Invitees · {detail.invitees.length}
-        </h2>
-        <div className="border border-border divide-y divide-border">
+      <section className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex items-center gap-3">
+          <h2 className="font-sans text-[11px] font-medium text-muted-foreground uppercase tracking-[0.18em]">
+            Invitees
+          </h2>
+          <span className="font-mono text-xs tabular-nums text-muted-foreground">
+            {detail.invitees.length}
+          </span>
+          <div className="h-px flex-1 bg-white/6" />
+        </div>
+        <div className="border border-white/8 bg-white/2 divide-y divide-white/6">
           {detail.invitees.map((inv) => {
             const responded = inv.respondedAt !== null;
             return (
@@ -198,25 +226,19 @@ async function PollDetailBody({ pollId, userId }: PollDetailBodyProps) {
                 className="flex items-center justify-between gap-3 px-4 py-2.5"
               >
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="font-mono text-xs text-foreground truncate">
+                  <span className="font-sans text-sm text-foreground truncate">
                     {inv.name ?? inv.email}
                   </span>
                   {inv.name && (
-                    <span className="font-mono text-[10px] text-muted-foreground truncate">
+                    <span className="font-mono text-[11px] text-muted-foreground truncate">
                       {inv.email}
                     </span>
                   )}
                 </div>
-                <Badge
-                  variant="outline"
-                  className={`font-mono text-[10px] gap-1 ${
-                    responded
-                      ? "border-green-500/20 bg-green-500/5 text-green-500"
-                      : "border-border bg-muted/30 text-muted-foreground"
-                  }`}
-                >
-                  {responded ? "Responded" : "Pending"}
-                </Badge>
+                <StatusPill
+                  label={responded ? "responded" : "pending"}
+                  tone={responded ? "success" : "muted"}
+                />
               </div>
             );
           })}

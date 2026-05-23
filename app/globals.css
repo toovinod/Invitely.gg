@@ -73,11 +73,11 @@
   --chart-4: #10b981;
   --chart-5: #f59e0b;
   --radius: 0rem;
-  --sidebar: #000000;
+  --sidebar: #161616;
   --sidebar-foreground: #fafafa;
   --sidebar-primary: #fafafa;
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #111111;
+  --sidebar-accent: #1f1f1f;
   --sidebar-accent-foreground: #fafafa;
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: rgba(255, 255, 255, 0.15);
@@ -107,11 +107,11 @@
   --chart-3: #06b6d4;
   --chart-4: #10b981;
   --chart-5: #f59e0b;
-  --sidebar: #000000;
+  --sidebar: #161616;
   --sidebar-foreground: #fafafa;
   --sidebar-primary: #fafafa;
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #111111;
+  --sidebar-accent: #1f1f1f;
   --sidebar-accent-foreground: #fafafa;
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: rgba(255, 255, 255, 0.15);
@@ -145,6 +145,16 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.12);
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile sidebar (Sheet) — the shadcn sidebar primitive renders the  */
+/* mobile variant via a portal'd <Sheet>, so the className passed to  */
+/* <Sidebar> doesn't reach it. We give it the same surface treatment  */
+/* used elsewhere (slightly elevated dark + subtle right border).     */
+/* ------------------------------------------------------------------ */
+[data-sidebar="sidebar"][data-mobile="true"] {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ------------------------------------------------------------------ */

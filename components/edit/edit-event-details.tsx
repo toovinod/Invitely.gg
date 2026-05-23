@@ -1,10 +1,10 @@
 "use client";
+import { ArrowRight, RefreshCw } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RefreshCw } from "lucide-react";
 import { useState } from "react";
 import {
   Select,
@@ -34,6 +34,10 @@ interface EditEventDetailsProps {
     autoInvite: boolean;
   }) => void;
 }
+
+const inputClass =
+  "font-sans text-sm h-10 px-3 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5";
+const labelClass = "font-sans text-sm font-medium text-foreground";
 
 export function EditEventDetails({
   initialValues,
@@ -68,14 +72,14 @@ export function EditEventDetails({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="event-name" className="font-mono text-xs">
-          Event name *
+        <Label htmlFor="event-name" className={labelClass}>
+          Event name <span className="text-destructive">*</span>
         </Label>
         <Input
           id="event-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="font-mono text-sm h-9"
+          className={inputClass}
           maxLength={100}
           required
           autoFocus
@@ -83,14 +87,14 @@ export function EditEventDetails({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="event-desc" className="font-mono text-xs">
-          Description *
+        <Label htmlFor="event-desc" className={labelClass}>
+          Description <span className="text-destructive">*</span>
         </Label>
         <Textarea
           id="event-desc"
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
-          className="font-mono text-sm min-h-20 resize-none"
+          className="font-sans text-sm min-h-24 resize-none px-3 py-2.5 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
           maxLength={1000}
           required
         />
@@ -98,8 +102,8 @@ export function EditEventDetails({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="event-at" className="font-mono text-xs">
-            Date & Time *
+          <Label htmlFor="event-at" className={labelClass}>
+            Date &amp; time <span className="text-destructive">*</span>
           </Label>
           <Input
             id="event-at"
@@ -107,19 +111,19 @@ export function EditEventDetails({
             value={eventAt}
             min={minDateTime}
             onChange={(e) => setEventAt(e.target.value)}
-            className="font-mono text-sm h-9"
+            className={inputClass}
             required
           />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="event-location" className="font-mono text-xs">
-            Location *
+          <Label htmlFor="event-location" className={labelClass}>
+            Location <span className="text-destructive">*</span>
           </Label>
           <Input
             id="event-location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="font-mono text-sm h-9"
+            className={inputClass}
             maxLength={200}
             required
           />
@@ -127,8 +131,8 @@ export function EditEventDetails({
       </div>
 
       <div className="flex flex-col gap-3">
-        <Label className="font-mono text-xs flex items-center gap-2">
-          <RefreshCw className="h-3 w-3" />
+        <Label className="font-sans text-sm font-medium text-foreground flex items-center gap-2">
+          <RefreshCw className="h-3.5 w-3.5 text-muted-foreground" />
           Repeat this event
         </Label>
         <Select
@@ -139,31 +143,31 @@ export function EditEventDetails({
             if (!newRecurrence) setAutoInvite(false);
           }}
         >
-          <SelectTrigger className="font-mono text-xs h-9 w-full sm:w-48 cursor-pointer">
+          <SelectTrigger className="font-sans text-sm h-10 w-full sm:w-56 cursor-pointer border-white/8 bg-transparent hover:border-white/15">
             <SelectValue placeholder="Does not repeat" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem
               value="none"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm cursor-pointer"
             >
               Does not repeat
             </SelectItem>
             <SelectItem
               value="weekly"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm cursor-pointer"
             >
               Weekly
             </SelectItem>
             <SelectItem
               value="monthly"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm cursor-pointer"
             >
               Monthly
             </SelectItem>
             <SelectItem
               value="annually"
-              className="font-mono text-xs cursor-pointer"
+              className="font-sans text-sm cursor-pointer"
             >
               Annually
             </SelectItem>
@@ -172,12 +176,12 @@ export function EditEventDetails({
 
         {recurrence && (
           <div className="flex flex-col gap-3">
-            <p className="font-mono text-xs text-muted-foreground">
+            <p className="font-sans text-sm text-muted-foreground">
               A new event will be created automatically every{" "}
-              <span className="text-foreground">{recurrence}</span> after this
-              one ends.
+              <span className="text-foreground font-medium">{recurrence}</span>{" "}
+              after this one ends.
             </p>
-            <div className="flex items-start gap-3 border border-border px-4 py-3">
+            <div className="flex items-start gap-3 border border-white/8 bg-white/2 px-4 py-3">
               <Checkbox
                 id="auto-invite-edit"
                 checked={autoInvite}
@@ -187,11 +191,11 @@ export function EditEventDetails({
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="auto-invite-edit"
-                  className="font-mono text-xs text-foreground font-semibold cursor-pointer"
+                  className="font-sans text-sm text-foreground font-medium cursor-pointer"
                 >
-                  Automatically invite same guests each time
+                  Automatically invite the same guests each time
                 </label>
-                <p className="font-mono text-xs text-muted-foreground">
+                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
                   When the next occurrence is created, invitations are sent to
                   the same guest list automatically. Leave unchecked to select
                   guests manually each time.
@@ -206,10 +210,11 @@ export function EditEventDetails({
         <Button
           type="submit"
           size="sm"
-          className="font-mono text-xs cursor-pointer"
+          className="font-sans text-sm h-9 gap-1.5 cursor-pointer"
           disabled={!isValid}
         >
-          Next →
+          Continue
+          <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </div>
     </form>

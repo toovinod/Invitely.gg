@@ -52,18 +52,21 @@ export function AppSidebar({ user }: { user: User }) {
   }
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border">
-      <SidebarHeader className="h-12 border-b border-border px-3 flex-row items-center gap-2 justify-between">
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-white/8 **:data-[sidebar=sidebar]:bg-transparent"
+    >
+      <SidebarHeader className="h-12 border-b border-white/8 px-3 flex-row items-center gap-2 justify-between bg-transparent">
         <Link
           href="/workspace"
           className="flex items-center gap-2 min-w-0 overflow-hidden"
         >
           <Logo size={18} className="shrink-0" />
-          <span className="font-mono text-sm font-semibold tracking-tight text-foreground truncate group-data-[collapsible=icon]:hidden">
+          <span className="font-sans text-sm font-semibold tracking-tight text-foreground truncate group-data-[collapsible=icon]:hidden">
             Invitely.gg
           </span>
         </Link>
-        <SidebarTrigger className="cursor-pointer h-6 w-6 shrink-0 rounded-none text-muted-foreground hover:text-foreground hover:bg-muted/50" />
+        <SidebarTrigger className="cursor-pointer h-6 w-6 shrink-0 text-muted-foreground hover:text-foreground hover:bg-white/6" />
       </SidebarHeader>
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="gap-0.5">
@@ -75,7 +78,7 @@ export function AppSidebar({ user }: { user: User }) {
                   asChild
                   isActive={isActive}
                   tooltip={label}
-                  className="h-8 rounded-none font-mono text-xs gap-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 data-[active=true]:bg-muted data-[active=true]:text-foreground"
+                  className="h-8 font-sans text-sm gap-3 text-muted-foreground hover:text-foreground hover:bg-white/6 data-[active=true]:bg-white/8 data-[active=true]:text-foreground"
                 >
                   <Link href={href}>
                     <Icon className="h-3.5 w-3.5 shrink-0" />
@@ -88,14 +91,14 @@ export function AppSidebar({ user }: { user: User }) {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border px-2 py-3">
+      <SidebarFooter className="border-t border-white/8 px-2 py-3 bg-transparent">
         <div className="px-2 mb-1 flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden">
           {user.name && (
-            <p className="font-mono text-xs text-foreground truncate leading-tight">
+            <p className="font-sans text-sm font-medium text-foreground truncate leading-tight">
               {user.name}
             </p>
           )}
-          <p className="font-mono text-[11px] text-muted-foreground truncate leading-tight">
+          <p className="font-mono text-xs text-muted-foreground truncate leading-tight tabular-nums">
             {user.email}
           </p>
         </div>
@@ -106,7 +109,7 @@ export function AppSidebar({ user }: { user: User }) {
               onClick={handleSignOut}
               disabled={isSigningOut}
               tooltip="Sign out"
-              className="h-8 rounded-none font-mono text-xs gap-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 disabled:opacity-50 cursor-pointer"
+              className="h-8 font-sans text-sm gap-3 text-muted-foreground hover:text-foreground hover:bg-white/6 disabled:opacity-50 cursor-pointer"
             >
               <LogOut className="h-3.5 w-3.5 shrink-0" />
               <span>{isSigningOut ? "Signing out..." : "Sign out"}</span>

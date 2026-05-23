@@ -7,10 +7,8 @@ import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { InsightsCard } from "@/components/dashboard/insights-card";
 import { GuestTable } from "@/components/dashboard/guest-table";
 import { getSession } from "@/lib/auth/client/get-session";
-import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { EventIdParams } from "@/lib/utils";
 import { Invitation } from "@/lib/types";
 import { db } from "@/lib/db/prisma";
@@ -29,6 +27,7 @@ import {
   Pencil,
   RefreshCw,
   AlertTriangle,
+  Clock,
 } from "lucide-react";
 
 const getEvent = cache(async (eventId: string) => {
@@ -57,6 +56,28 @@ export async function generateMetadata({
   return {
     title: event ? `${event.name} | Invitely.gg` : "Event | Invitely.gg",
   };
+}
+
+function StatusPill({
+  label,
+  tone,
+}: {
+  label: string;
+  tone: "default" | "muted" | "destructive";
+}) {
+  const className =
+    tone === "destructive"
+      ? "border-destructive/30 bg-destructive/10 text-destructive"
+      : tone === "muted"
+        ? "border-white/8 bg-white/3 text-muted-foreground"
+        : "border-white/15 bg-white/6 text-foreground";
+  return (
+    <span
+      className={`inline-flex items-center gap-1 border px-2 h-5 font-sans text-[11px] uppercase tracking-wide ${className}`}
+    >
+      {label}
+    </span>
+  );
 }
 
 async function GuestSection({
@@ -96,11 +117,13 @@ async function GuestSection({
   return (
     <>
       <SummaryCards summary={summary} />
-      <Separator className="bg-border" />
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-            Guest list · {summary.total}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <h2 className="font-sans text-[11px] text-muted-foreground uppercase tracking-[0.18em] font-medium">
+            Guest list ·{" "}
+            <span className="font-mono tabular-nums text-foreground">
+              {summary.total}
+            </span>
           </h2>
           {!isScheduled && (
             <ReminderButton eventId={eventId} pendingCount={summary.pending} />
@@ -152,7 +175,7 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
     hoursUntilEvent > 12 &&
     hoursUntilEvent <= 18;
 
-  const showYellowBanner =
+  const showRecurringNotSent =
     isChildEvent &&
     !isCancelled &&
     !isPast &&
@@ -163,20 +186,6 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
     hoursUntilEvent < 1
       ? "less than 1 hour"
       : `${Math.round(hoursUntilEvent)} hour${Math.round(hoursUntilEvent) === 1 ? "" : "s"}`;
-
-  const badgeClass = isCancelled
-    ? "bg-destructive/10 text-destructive border-destructive/20"
-    : isPast
-      ? "bg-muted text-muted-foreground border-border"
-      : "bg-muted text-foreground border-border";
-
-  const badgeLabel = isCancelled
-    ? "cancelled"
-    : isScheduled
-      ? "scheduled"
-      : isPast
-        ? "past"
-        : "upcoming";
 
   const formattedDate = new Date(event.eventAt).toLocaleDateString("en-US", {
     weekday: "long",
@@ -193,166 +202,20 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
   const guestCount = await db.invitation.count({ where: { eventId } });
 
   return (
-    <div className="flex flex-col gap-6">
-      <Button
-        variant="ghost"
-        size="sm"
-        asChild
-        className="font-mono text-xs gap-1.5 -ml-2 h-7 w-fit text-muted-foreground hover:text-foreground rounded-none"
-      >
-        <Link href="/events">
-          <ArrowLeft className="h-3 w-3" />
-          All events
+    <div className="flex flex-col gap-6 sm:gap-7">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <Link href="/events" className="shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            className="font-sans text-sm h-8 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            All events
+          </Button>
         </Link>
-      </Button>
-      {showUrgentBanner && (
-        <div className="border border-destructive/30 bg-destructive/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5 animate-pulse" />
-            <div className="flex flex-col gap-0.5">
-              <p className="font-mono text-xs font-semibold text-destructive">
-                Event in {hoursLabel} — no invitations sent
-              </p>
-              <p className="font-mono text-xs text-muted-foreground">
-                Your guests don&apos;t know about this recurring event yet.
-              </p>
-            </div>
-          </div>
-          <Link
-            href={`/events/${eventId}/send-invitations`}
-            className="shrink-0"
-          >
-            <Button size="sm" className="font-mono text-xs h-8 rounded-none">
-              Send invitations now
-            </Button>
-          </Link>
-        </div>
-      )}
 
-      {showInvitePendingBanner && (
-        <div className="border border-border bg-muted/20 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <RefreshCw className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-            <div className="flex flex-col gap-0.5">
-              <p className="font-mono text-xs font-semibold text-foreground">
-                Event in {hoursLabel} — send invitations soon
-              </p>
-              <p className="font-mono text-xs text-muted-foreground">
-                This occurrence was created automatically. Select guests and
-                send.
-              </p>
-            </div>
-          </div>
-          <Link
-            href={`/events/${eventId}/send-invitations`}
-            className="shrink-0"
-          >
-            <Button
-              variant="outline"
-              size="sm"
-              className="font-mono text-xs h-8 rounded-none"
-            >
-              Send invitations
-            </Button>
-          </Link>
-        </div>
-      )}
-
-      {showYellowBanner && (
-        <div className="border border-border bg-muted/10 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <RefreshCw className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-            <div className="flex flex-col gap-0.5">
-              <p className="font-mono text-xs font-semibold text-foreground">
-                Recurring event — no invitations sent yet
-              </p>
-              <p className="font-mono text-xs text-muted-foreground">
-                This occurrence was created automatically. Select guests when
-                ready.
-              </p>
-            </div>
-          </div>
-          <Link
-            href={`/events/${eventId}/send-invitations`}
-            className="shrink-0"
-          >
-            <Button
-              variant="outline"
-              size="sm"
-              className="font-mono text-xs h-8 rounded-none"
-            >
-              Send invitations
-            </Button>
-          </Link>
-        </div>
-      )}
-
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge
-              variant="outline"
-              className={`font-mono text-[10px] px-1.5 py-0 h-4 rounded-none ${badgeClass}`}
-            >
-              {badgeLabel}
-            </Badge>
-            {isRecurring && (
-              <Badge
-                variant="outline"
-                className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none bg-muted text-muted-foreground border-border flex items-center gap-1"
-              >
-                <RefreshCw className="h-2.5 w-2.5" />
-                {event.recurrence}
-              </Badge>
-            )}
-            {isChildEvent && noInvitationsSent && !isCancelled && !isPast && (
-              <Badge
-                variant="outline"
-                className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none bg-muted text-muted-foreground border-border"
-              >
-                invite pending
-              </Badge>
-            )}
-          </div>
-
-          <h1 className="font-mono text-base font-semibold text-foreground">
-            {event.name}
-          </h1>
-
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
-              <span
-                className={`font-mono text-xs text-muted-foreground ${isCancelled ? "line-through" : ""}`}
-              >
-                {formattedDate} at {formattedTime}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
-              <span
-                className={`font-mono text-xs text-muted-foreground ${isCancelled ? "line-through" : ""}`}
-              >
-                {event.location}
-              </span>
-            </div>
-          </div>
-
-          {isScheduled && event.scheduledAt && (
-            <p className="font-mono text-xs text-muted-foreground">
-              Sends{" "}
-              {new Date(event.scheduledAt).toLocaleDateString("en-US", {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </p>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+        <div className="flex items-center gap-2 flex-wrap justify-end">
           {isScheduled && event.scheduledAt && (
             <UnscheduleButton
               eventId={event.id}
@@ -370,11 +233,11 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
             <Button
               variant="outline"
               size="sm"
-              className="font-mono text-xs h-8 gap-2 rounded-none"
+              className="font-sans text-sm h-8 gap-1.5 border-white/8 hover:border-white/15 hover:bg-white/4"
               asChild
             >
               <Link href={`/events/${eventId}/edit`}>
-                <Pencil className="h-3 w-3" />
+                <Pencil className="h-3.5 w-3.5" />
                 Edit
               </Link>
             </Button>
@@ -390,7 +253,153 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
         </div>
       </div>
 
-      <Separator className="bg-border" />
+      {showUrgentBanner && (
+        <div className="border border-destructive/30 bg-destructive/10 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5 animate-pulse" />
+            <div className="flex flex-col gap-0.5">
+              <p className="font-sans text-sm font-semibold text-destructive">
+                Event in {hoursLabel} — no invitations sent
+              </p>
+              <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+                Your guests don&apos;t know about this recurring event yet.
+              </p>
+            </div>
+          </div>
+          <Link
+            href={`/events/${eventId}/send-invitations`}
+            className="shrink-0"
+          >
+            <Button size="sm" className="font-sans text-sm h-8">
+              Send invitations now
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {showInvitePendingBanner && (
+        <div className="border border-white/15 bg-white/4 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <Clock className="h-4 w-4 text-foreground shrink-0 mt-0.5" />
+            <div className="flex flex-col gap-0.5">
+              <p className="font-sans text-sm font-semibold text-foreground">
+                Event in {hoursLabel} — send invitations soon
+              </p>
+              <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+                This occurrence was created automatically. Select guests and
+                send.
+              </p>
+            </div>
+          </div>
+          <Link
+            href={`/events/${eventId}/send-invitations`}
+            className="shrink-0"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="font-sans text-sm h-8 border-white/15 hover:border-white/22 hover:bg-white/6"
+            >
+              Send invitations
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {showRecurringNotSent && (
+        <div className="border border-white/8 bg-white/2 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <RefreshCw className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+            <div className="flex flex-col gap-0.5">
+              <p className="font-sans text-sm font-semibold text-foreground">
+                Recurring event — no invitations sent yet
+              </p>
+              <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+                This occurrence was created automatically. Select guests when
+                ready.
+              </p>
+            </div>
+          </div>
+          <Link
+            href={`/events/${eventId}/send-invitations`}
+            className="shrink-0"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="font-sans text-sm h-8 border-white/8 hover:border-white/15 hover:bg-white/4"
+            >
+              Send invitations
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-3 border-b border-white/8 pb-5">
+        <div className="flex items-center gap-2 flex-wrap">
+          <StatusPill
+            label={
+              isCancelled
+                ? "cancelled"
+                : isScheduled
+                  ? "scheduled"
+                  : isPast
+                    ? "past"
+                    : "upcoming"
+            }
+            tone={isCancelled ? "destructive" : isPast ? "muted" : "default"}
+          />
+          {isRecurring && (
+            <span className="inline-flex items-center gap-1 border border-white/8 bg-white/3 px-2 h-5 font-sans text-[11px] uppercase tracking-wide text-muted-foreground">
+              <RefreshCw className="h-2.5 w-2.5" />
+              {event.recurrence}
+            </span>
+          )}
+          {isChildEvent && noInvitationsSent && !isCancelled && !isPast && (
+            <span className="inline-flex items-center gap-1 border border-white/8 bg-white/3 px-2 h-5 font-sans text-[11px] uppercase tracking-wide text-muted-foreground">
+              invite pending
+            </span>
+          )}
+        </div>
+
+        <h1 className="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+          {event.name}
+        </h1>
+
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+            <span
+              className={`font-mono text-xs tabular-nums text-muted-foreground ${isCancelled ? "line-through" : ""}`}
+            >
+              {formattedDate} at {formattedTime}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <MapPin className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+            <span
+              className={`font-sans text-sm text-muted-foreground ${isCancelled ? "line-through" : ""}`}
+            >
+              {event.location}
+            </span>
+          </div>
+        </div>
+
+        {isScheduled && event.scheduledAt && (
+          <p className="font-sans text-xs text-muted-foreground">
+            Sends{" "}
+            <span className="font-mono tabular-nums text-foreground">
+              {new Date(event.scheduledAt).toLocaleDateString("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          </p>
+        )}
+      </div>
 
       <InsightsCard eventId={eventId} />
 
@@ -398,7 +407,6 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
         fallback={
           <>
             <SummaryCardsSkeleton />
-            <Separator className="bg-border" />
             <GuestTableSkeleton />
           </>
         }

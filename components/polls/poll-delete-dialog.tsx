@@ -53,32 +53,32 @@ export function PollDeleteDialog({ pollId, pollTitle }: PollDeleteDialogProps) {
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs h-8 gap-2 text-muted-foreground hover:text-destructive cursor-pointer rounded-none"
+          className="font-sans text-sm h-8 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4 text-muted-foreground hover:text-destructive"
         >
-          <Trash2 className="h-3 w-3" />
+          <Trash2 className="h-3.5 w-3.5" />
           Delete
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="font-mono sm:max-w-sm">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="font-mono text-sm">
+      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <AlertDialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <AlertDialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Delete poll
           </AlertDialogTitle>
-          <AlertDialogDescription className="font-mono text-xs text-muted-foreground">
+          <AlertDialogDescription className="font-sans text-sm text-muted-foreground">
             Permanently delete{" "}
-            <span className="text-foreground font-semibold">{pollTitle}</span>{" "}
-            and all of its votes. Invitees will no longer be able to vote. This
+            <span className="text-foreground font-medium">{pollTitle}</span> and
+            all of its votes. Invitees will no longer be able to vote. This
             cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
+        <AlertDialogFooter className="px-5 sm:px-6 py-4 gap-2">
+          <AlertDialogCancel className="font-sans text-sm h-9 cursor-pointer mt-0 border-white/8 hover:border-white/15 hover:bg-white/4">
             Keep poll
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
-            className="font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
+            className="font-sans text-sm h-9 bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
           >
             {isDeleting ? "Deleting..." : "Delete poll"}
           </AlertDialogAction>

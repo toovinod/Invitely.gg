@@ -1,13 +1,4 @@
 import { LifetimeStats, RateStats } from "@/lib/analytics/types";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-  CardAction,
-} from "@/components/ui/card";
 import {
   TrendingUp,
   TrendingDown,
@@ -114,7 +105,7 @@ export function LifetimeSummary({ lifetime, rates }: LifetimeSummaryProps) {
   ];
 
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
       {cards.map((spec) => (
         <SummaryTile key={spec.title} spec={spec} />
       ))}
@@ -128,38 +119,33 @@ function SummaryTile({ spec }: { spec: CardSpec }) {
   const Icon = spec.icon;
 
   return (
-    <Card className="@container/card">
-      <CardHeader>
-        <CardDescription className="font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5">
+    <div className="relative overflow-hidden border border-white/8 bg-white/2 hover:border-white/15 hover:bg-white/4 transition-all duration-300 px-4 sm:px-5 py-4 flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground flex items-center gap-1.5">
           <Icon className="h-3 w-3" />
           {spec.title}
-        </CardDescription>
-        <CardTitle className="font-mono text-2xl font-semibold tabular-nums @[180px]/card:text-2xl">
-          {spec.value}
-        </CardTitle>
-        <CardAction>
-          <Badge
-            variant="outline"
-            className={`font-mono text-[10px] tabular-nums gap-1 ${trendStyle.badgeClass}`}
-          >
-            <TrendIcon className="h-3 w-3" />
-            {spec.trendLabel}
-          </Badge>
-        </CardAction>
-      </CardHeader>
-      <CardFooter className="flex-col items-start gap-1 border-t-0 p-0 px-4">
-        <div className="font-mono text-xs text-foreground line-clamp-1 flex items-center gap-1.5">
+        </span>
+        <span
+          className={`inline-flex items-center gap-1 border px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide tabular-nums ${trendStyle.pillClass}`}
+        >
+          <TrendIcon className="h-3 w-3" />
+          {spec.trendLabel}
+        </span>
+      </div>
+
+      <div className="font-mono text-2xl sm:text-3xl font-semibold tabular-nums tracking-tight text-foreground leading-none">
+        {spec.value}
+      </div>
+
+      <div className="flex flex-col gap-0.5 mt-auto">
+        <p className="font-sans text-xs text-foreground line-clamp-1">
           {spec.description}
-          <TrendIcon
-            className={`h-3 w-3 shrink-0 ${trendStyle.textClass}`}
-            aria-hidden="true"
-          />
-        </div>
-        <div className="font-mono text-[10px] text-muted-foreground">
+        </p>
+        <p className="font-mono text-[10px] text-muted-foreground tabular-nums">
           {spec.hint}
-        </div>
-      </CardFooter>
-    </Card>
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -167,24 +153,20 @@ const trendStyles: Record<
   Trend,
   {
     icon: typeof TrendingUp;
-    badgeClass: string;
-    textClass: string;
+    pillClass: string;
   }
 > = {
   up: {
     icon: TrendingUp,
-    badgeClass: "border-green-500/20 text-green-500 bg-green-500/5",
-    textClass: "text-green-500",
+    pillClass: "border-sky-400/25 bg-sky-400/10 text-sky-400",
   },
   down: {
     icon: TrendingDown,
-    badgeClass: "border-destructive/20 text-destructive bg-destructive/5",
-    textClass: "text-destructive",
+    pillClass: "border-destructive/30 bg-destructive/10 text-destructive",
   },
   flat: {
     icon: Minus,
-    badgeClass: "border-border text-muted-foreground bg-muted/20",
-    textClass: "text-muted-foreground",
+    pillClass: "border-white/8 bg-white/3 text-muted-foreground",
   },
 };
 

@@ -36,11 +36,6 @@ export function SubscribeDialog({
   const [copied, setCopied] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
 
-  // The server hands us `initialToken` on first paint and the only mutator
-  // after that is the local regenerate handler — so we don't need an effect
-  // to sync prop → state. Keeping local state as the source of truth keeps
-  // React happy (no setState-in-effect) and avoids a redundant render.
-
   const feedUrl = `${appUrl}/api/calendar/feed/${token}.ics`;
 
   async function handleCopy() {
@@ -73,21 +68,21 @@ export function SubscribeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="font-mono sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-mono text-sm">
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <DialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Subscribe to your calendar
           </DialogTitle>
-          <DialogDescription className="font-mono text-xs text-muted-foreground">
-            Paste this URL into Google Calendar / Apple Calendar / Outlook to
+          <DialogDescription className="font-sans text-sm text-muted-foreground">
+            Paste this URL into Google Calendar, Apple Calendar, or Outlook to
             see Invitely.gg events alongside your other calendars. The feed
             updates automatically.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 px-5 sm:px-6 py-5">
           <div className="flex flex-col gap-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <span className="font-sans text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
               Feed URL
             </span>
             <div className="flex items-stretch gap-1.5">
@@ -95,55 +90,59 @@ export function SubscribeDialog({
                 readOnly
                 value={feedUrl}
                 onFocus={(e) => e.currentTarget.select()}
-                className="flex-1 min-w-0 font-mono text-[11px] h-8 px-2 border border-border bg-muted/30 text-foreground focus:outline-none focus:border-foreground/40 rounded-none tabular-nums"
+                className="flex-1 min-w-0 font-mono text-xs h-9 px-3 border border-white/8 bg-white/2 text-foreground focus:outline-none focus:border-white/20 tabular-nums"
               />
               <Button
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs h-8 gap-2 rounded-none cursor-pointer shrink-0"
+                className="font-sans text-sm h-9 gap-1.5 cursor-pointer shrink-0 border-white/8 hover:border-white/15 hover:bg-white/4"
                 onClick={handleCopy}
               >
                 {copied ? (
-                  <Check className="h-3 w-3" />
+                  <Check className="h-3.5 w-3.5" />
                 ) : (
-                  <Copy className="h-3 w-3" />
+                  <Copy className="h-3.5 w-3.5" />
                 )}
                 {copied ? "Copied" : "Copy"}
               </Button>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 border border-border bg-muted/10 px-3 py-2.5">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <div className="flex flex-col gap-2 border border-white/8 bg-white/2 px-3 py-2.5">
+            <span className="font-sans text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
               How to subscribe
             </span>
-            <ol className="font-mono text-xs text-muted-foreground leading-relaxed list-decimal pl-4 flex flex-col gap-0.5">
+            <ol className="font-sans text-xs text-muted-foreground leading-relaxed list-decimal pl-4 flex flex-col gap-1">
               <li>
-                <span className="text-foreground">Google Calendar:</span> Other
-                calendars → + → From URL → paste
+                <span className="text-foreground font-medium">
+                  Google Calendar:
+                </span>{" "}
+                Other calendars → + → From URL → paste
               </li>
               <li>
-                <span className="text-foreground">Apple Calendar:</span> File →
-                New Calendar Subscription → paste
+                <span className="text-foreground font-medium">
+                  Apple Calendar:
+                </span>{" "}
+                File → New Calendar Subscription → paste
               </li>
               <li>
-                <span className="text-foreground">Outlook:</span> Add calendar →
-                Subscribe from web → paste
+                <span className="text-foreground font-medium">Outlook:</span>{" "}
+                Add calendar → Subscribe from web → paste
               </li>
             </ol>
           </div>
         </div>
 
-        <DialogFooter className="flex-row justify-between sm:justify-between gap-2">
+        <DialogFooter className="px-5 sm:px-6 py-4 gap-2 flex-row justify-between sm:justify-between border-t border-white/6">
           <Button
             variant="ghost"
             size="sm"
-            className="font-mono text-xs h-8 gap-2 rounded-none cursor-pointer text-muted-foreground hover:text-destructive"
+            className="font-sans text-sm h-9 gap-1.5 cursor-pointer text-muted-foreground hover:text-destructive"
             onClick={handleRegenerate}
             disabled={isRegenerating}
           >
             <RefreshCw
-              className={`h-3 w-3 ${isRegenerating ? "animate-spin" : ""}`}
+              className={`h-3.5 w-3.5 ${isRegenerating ? "animate-spin" : ""}`}
             />
             {isRegenerating ? "Regenerating..." : "Regenerate URL"}
           </Button>
@@ -151,9 +150,9 @@ export function SubscribeDialog({
             <Button
               variant="outline"
               size="sm"
-              className="font-mono text-xs h-8 gap-2 rounded-none cursor-pointer"
+              className="font-sans text-sm h-9 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
             >
-              <Download className="h-3 w-3" />
+              <Download className="h-3.5 w-3.5" />
               Download .ics
             </Button>
           </a>

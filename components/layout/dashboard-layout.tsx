@@ -1,3 +1,4 @@
+import { GrainBackdrop } from "@/components/landing/grain-backdrop";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
@@ -16,14 +17,15 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ user, children }: DashboardLayoutProps) {
   return (
     <TooltipProvider>
-      <SidebarProvider>
+      <GrainBackdrop />
+      <SidebarProvider className="bg-transparent">
         <AppSidebar user={user} />
 
-        <SidebarInset className="flex flex-col min-h-svh">
-          <header className="md:hidden sticky top-0 z-30 flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background px-4">
-            <SidebarTrigger className="h-7 w-7 rounded-none -ml-1 text-muted-foreground hover:text-foreground" />
-            <Separator orientation="vertical" className="h-4" />
-            <span className="font-mono text-sm font-semibold text-foreground">
+        <SidebarInset className="flex flex-col min-h-svh bg-transparent">
+          <header className="md:hidden sticky top-0 z-30 flex h-12 shrink-0 items-center gap-2 border-b border-white/8 bg-[#161616]/85 backdrop-blur-md px-4">
+            <SidebarTrigger className="h-7 w-7 -ml-1 text-muted-foreground hover:text-foreground hover:bg-white/4" />
+            <Separator orientation="vertical" className="h-4 bg-white/8" />
+            <span className="font-sans text-sm font-semibold tracking-tight text-foreground">
               Invitely.gg
             </span>
           </header>

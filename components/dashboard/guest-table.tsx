@@ -1,9 +1,7 @@
 "use client";
 import { OrganizerNoteInput } from "@/components/dashboard/organizer-note-input";
 import { ResendLinkButton } from "@/components/dashboard/resend-link-button";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
@@ -19,6 +17,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  ChevronDown,
+  ChevronUp,
+  Check,
+  HelpCircle,
+  X,
+  Clock,
+} from "lucide-react";
 
 type InvitationStatus = "pending" | "attending" | "maybe" | "declined";
 
@@ -42,25 +48,45 @@ interface GuestTableProps {
 
 const statusConfig: Record<
   InvitationStatus,
-  { label: string; className: string }
+  {
+    label: string;
+    className: string;
+    Icon: typeof Check;
+  }
 > = {
   attending: {
     label: "Attending",
-    className: "bg-green-500/10 text-green-500 border-green-500/20",
+    Icon: Check,
+    className: "border-white/15 bg-white/6 text-foreground",
   },
   maybe: {
     label: "Maybe",
-    className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
+    Icon: HelpCircle,
+    className: "border-white/8 bg-white/3 text-muted-foreground",
   },
   declined: {
     label: "Declined",
-    className: "bg-destructive/10 text-destructive border-destructive/20",
+    Icon: X,
+    className: "border-destructive/30 bg-destructive/10 text-destructive",
   },
   pending: {
     label: "Pending",
-    className: "bg-muted text-muted-foreground border-border",
+    Icon: Clock,
+    className: "border-white/8 bg-transparent text-muted-foreground",
   },
 };
+
+function StatusBadge({ status }: { status: InvitationStatus }) {
+  const { label, Icon, className } = statusConfig[status];
+  return (
+    <span
+      className={`inline-flex items-center gap-1 border px-1.5 h-5 font-sans text-[11px] ${className}`}
+    >
+      <Icon className="h-2.5 w-2.5" />
+      {label}
+    </span>
+  );
+}
 
 function formatDate(date: Date | null): string {
   if (!date) return "—";
@@ -82,56 +108,46 @@ function GuestRow({
   isScheduled?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const config = statusConfig[inv.status];
   const hasNotes = !!inv.guestNote || !!inv.organizerNote;
 
   return (
     <>
-      <TableRow className="border-border hover:bg-muted/30">
-        <TableCell className="font-mono text-xs text-foreground px-4 py-2.5">
+      <TableRow className="border-white/6 hover:bg-white/2">
+        <TableCell className="font-sans text-sm text-foreground px-4 py-3">
           <div className="flex flex-col gap-0.5">
             <span>
               {inv.name ?? (
                 <span className="text-muted-foreground italic">No name</span>
               )}
             </span>
-            <span className="text-muted-foreground md:hidden">{inv.email}</span>
+            <span className="font-mono text-[11px] text-muted-foreground md:hidden">
+              {inv.email}
+            </span>
           </div>
         </TableCell>
 
-        <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5 hidden md:table-cell">
+        <TableCell className="font-mono text-xs text-muted-foreground px-4 py-3 hidden md:table-cell">
           {inv.email}
         </TableCell>
 
-        <TableCell className="px-4 py-2.5">
-          <Badge
-            variant="outline"
-            className={`font-mono text-xs px-1.5 py-0 h-4 ${config.className}`}
-          >
-            {config.label}
-          </Badge>
+        <TableCell className="px-4 py-3">
+          <StatusBadge status={inv.status} />
         </TableCell>
 
-        <TableCell className="px-4 py-2.5 hidden lg:table-cell">
+        <TableCell className="px-4 py-3 hidden lg:table-cell">
           <Tooltip>
             <TooltipTrigger asChild>
               {inv.openedAt ? (
-                <Badge
-                  variant="outline"
-                  className="font-mono text-xs px-1.5 py-0 h-4 bg-blue-500/10 text-blue-500 border-blue-500/20 cursor-default"
-                >
+                <span className="inline-flex items-center gap-1 border border-white/15 bg-white/4 px-1.5 h-5 font-sans text-[11px] text-foreground cursor-default">
                   Opened
-                </Badge>
+                </span>
               ) : (
-                <Badge
-                  variant="outline"
-                  className="font-mono text-xs px-1.5 py-0 h-4 bg-muted text-muted-foreground border-border cursor-default"
-                >
+                <span className="inline-flex items-center gap-1 border border-white/8 bg-transparent px-1.5 h-5 font-sans text-[11px] text-muted-foreground cursor-default">
                   Unknown
-                </Badge>
+                </span>
               )}
             </TooltipTrigger>
-            <TooltipContent className="font-mono text-xs max-w-48">
+            <TooltipContent className="font-sans text-xs max-w-48">
               {inv.openedAt
                 ? `Opened ${new Date(inv.openedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}`
                 : "Cannot confirm — recipient may have images blocked"}
@@ -139,29 +155,30 @@ function GuestRow({
           </Tooltip>
         </TableCell>
 
-        <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5 hidden lg:table-cell">
+        <TableCell className="font-mono text-xs text-muted-foreground px-4 py-3 hidden lg:table-cell tabular-nums">
           {formatDate(inv.respondedAt)}
         </TableCell>
 
-        <TableCell className="px-4 py-2.5 text-right">
+        <TableCell className="px-4 py-3 text-right">
           <div className="flex items-center justify-end gap-1">
             {!isScheduled && (
               <ResendLinkButton eventId={eventId} email={inv.email} />
             )}
             <Button
               variant="ghost"
-              size="sm"
-              className={`h-7 w-7 p-0 transition-colors cursor-pointer ${
+              size="icon-sm"
+              className={`h-7 w-7 transition-colors cursor-pointer hover:bg-white/4 ${
                 hasNotes
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => setExpanded((prev) => !prev)}
+              aria-label={expanded ? "Collapse" : "Expand"}
             >
               {expanded ? (
-                <ChevronUp className="h-3 w-3" />
+                <ChevronUp className="h-3.5 w-3.5" />
               ) : (
-                <ChevronDown className="h-3 w-3" />
+                <ChevronDown className="h-3.5 w-3.5" />
               )}
             </Button>
           </div>
@@ -169,25 +186,25 @@ function GuestRow({
       </TableRow>
 
       {expanded && (
-        <TableRow className="border-border bg-muted/10 hover:bg-muted/10">
-          <TableCell colSpan={6} className="px-4 py-3">
+        <TableRow className="border-white/6 bg-white/2 hover:bg-white/2">
+          <TableCell colSpan={6} className="px-4 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full">
               <div className="flex flex-col gap-1.5 min-w-0">
-                <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+                <span className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                   Guest note
                 </span>
                 {inv.guestNote ? (
-                  <p className="font-mono text-xs text-foreground leading-relaxed wrap-break-words whitespace-pre-wrap">
+                  <p className="font-sans text-sm text-foreground/90 leading-relaxed wrap-break-words whitespace-pre-wrap">
                     {inv.guestNote}
                   </p>
                 ) : (
-                  <span className="font-mono text-xs text-muted-foreground/40 italic">
+                  <span className="font-sans text-sm text-muted-foreground/40 italic">
                     No note from guest
                   </span>
                 )}
               </div>
               <div className="flex flex-col gap-1.5 min-w-0">
-                <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+                <span className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                   Your private note
                 </span>
                 <OrganizerNoteInput
@@ -196,18 +213,18 @@ function GuestRow({
                 />
               </div>
               <div className="flex flex-col gap-1 lg:hidden">
-                <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+                <span className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                   Opened
                 </span>
-                <span className="font-mono text-xs text-muted-foreground">
+                <span className="font-mono text-xs tabular-nums text-muted-foreground">
                   {inv.openedAt ? formatDate(inv.openedAt) : "Unknown"}
                 </span>
               </div>
               <div className="flex flex-col gap-1 lg:hidden">
-                <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+                <span className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                   Responded
                 </span>
-                <span className="font-mono text-xs text-muted-foreground">
+                <span className="font-mono text-xs tabular-nums text-muted-foreground">
                   {formatDate(inv.respondedAt)}
                 </span>
               </div>
@@ -226,8 +243,8 @@ export function GuestTable({
 }: GuestTableProps) {
   if (invitations.length === 0) {
     return (
-      <div className="py-12 text-center">
-        <p className="font-mono text-xs text-muted-foreground">
+      <div className="border border-white/8 bg-white/2 py-12 text-center">
+        <p className="font-sans text-sm text-muted-foreground">
           No invitations sent yet
         </p>
       </div>
@@ -246,26 +263,26 @@ export function GuestTable({
 
   return (
     <TooltipProvider>
-      <div className="border border-border overflow-x-auto">
+      <div className="border border-white/8 bg-white/2 overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="hover:bg-transparent border-border">
-              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+            <TableRow className="hover:bg-transparent border-white/6">
+              <TableHead className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider h-10 px-4 font-medium">
                 Name
               </TableHead>
-              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 hidden md:table-cell">
+              <TableHead className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider h-10 px-4 hidden md:table-cell font-medium">
                 Email
               </TableHead>
-              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+              <TableHead className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider h-10 px-4 font-medium">
                 Status
               </TableHead>
-              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 hidden lg:table-cell">
+              <TableHead className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider h-10 px-4 hidden lg:table-cell font-medium">
                 Opened
               </TableHead>
-              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 hidden lg:table-cell">
+              <TableHead className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider h-10 px-4 hidden lg:table-cell font-medium">
                 Responded
               </TableHead>
-              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 text-right">
+              <TableHead className="font-sans text-[11px] text-muted-foreground uppercase tracking-wider h-10 px-4 text-right font-medium">
                 Actions
               </TableHead>
             </TableRow>

@@ -1,8 +1,7 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Users } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 
 export interface RecipientEntry {
@@ -64,8 +63,8 @@ export function WorkspaceRecipientPicker({
 
   if (workspaces.length === 0) {
     return (
-      <div className="py-8 text-center border border-dashed border-border">
-        <p className="font-mono text-xs text-muted-foreground">
+      <div className="py-10 text-center border border-dashed border-white/8 bg-transparent">
+        <p className="font-sans text-sm text-muted-foreground">
           No workspaces found. Create a workspace first.
         </p>
       </div>
@@ -75,22 +74,19 @@ export function WorkspaceRecipientPicker({
   return (
     <div className="flex flex-col gap-3">
       {showSelectionBadge && (
-        <div className="flex items-center justify-between">
-          <p className="font-mono text-xs text-muted-foreground">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="font-sans text-sm text-muted-foreground">
             Pick the people you want to invite
           </p>
           {selected.size > 0 && (
-            <Badge
-              variant="secondary"
-              className="font-mono text-xs bg-foreground/10 text-foreground"
-            >
+            <span className="inline-flex items-center gap-1 border border-white/15 bg-white/6 px-2 h-6 font-mono text-xs tabular-nums text-foreground">
               {selected.size} selected
-            </Badge>
+            </span>
           )}
         </div>
       )}
 
-      <div className="flex flex-col border border-border divide-y divide-border">
+      <div className="flex flex-col border border-white/8 bg-white/2 divide-y divide-white/6 overflow-hidden">
         {workspaces.map((workspace) => {
           const members: RecipientEntry[] = workspace.members.map((m) => ({
             email: m.email,
@@ -104,7 +100,7 @@ export function WorkspaceRecipientPicker({
 
           return (
             <div key={workspace.id}>
-              <div className="flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors">
+              <div className="flex items-center gap-3 px-3 sm:px-4 py-3 hover:bg-white/2 transition-colors">
                 <Checkbox
                   checked={state === "all"}
                   data-state={state === "some" ? "indeterminate" : undefined}
@@ -118,35 +114,33 @@ export function WorkspaceRecipientPicker({
                 />
                 <button
                   type="button"
-                  className="flex flex-1 items-center justify-between gap-3 text-left cursor-pointer"
+                  className="flex flex-1 items-center justify-between gap-3 text-left cursor-pointer min-w-0"
                   onClick={() => toggleExpanded(workspace.id)}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-semibold text-foreground">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Users className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span className="font-sans text-sm font-medium text-foreground truncate">
                       {workspace.name}
                     </span>
-                    <Badge
-                      variant="secondary"
-                      className="font-mono text-xs px-1.5 py-0 h-4"
-                    >
+                    <span className="font-mono text-xs tabular-nums text-muted-foreground shrink-0">
                       {workspace.members.length}
-                    </Badge>
+                    </span>
                     {state === "some" && (
-                      <span className="font-mono text-xs text-muted-foreground">
+                      <span className="font-sans text-xs text-muted-foreground shrink-0 hidden sm:inline">
                         ({selectedHere} selected)
                       </span>
                     )}
                   </div>
                   {isExpanded ? (
-                    <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                   ) : (
-                    <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                   )}
                 </button>
               </div>
 
               {isExpanded && workspace.members.length > 0 && (
-                <div className="border-t border-border bg-muted/10 divide-y divide-border">
+                <div className="border-t border-white/6 bg-white/2 divide-y divide-white/4">
                   {workspace.members.map((member) => {
                     const entry: RecipientEntry = {
                       email: member.email,
@@ -156,17 +150,11 @@ export function WorkspaceRecipientPicker({
                     return (
                       <div
                         key={member.id}
-                        className="flex items-center gap-3 px-4 py-2.5 pl-10 hover:bg-muted/30 transition-colors cursor-pointer"
+                        className={`flex items-center gap-3 px-3 sm:px-4 py-2.5 pl-8 sm:pl-10 transition-colors cursor-pointer ${
+                          isSelected ? "bg-white/4" : "hover:bg-white/2"
+                        }`}
                         onClick={() => onToggleRecipient(entry)}
                       >
-                        {/*
-                          Wrap the Checkbox in a span that swallows the click so
-                          the row's onClick doesn't double-fire. Without this,
-                          clicking the checkbox triggers both Radix's
-                          onCheckedChange AND the bubbled row onClick — two
-                          rapid setState calls per click which React 19 flags
-                          as a potential infinite loop.
-                         */}
                         <span onClick={(e) => e.stopPropagation()}>
                           <Checkbox
                             className="cursor-pointer"
@@ -174,13 +162,13 @@ export function WorkspaceRecipientPicker({
                             onCheckedChange={() => onToggleRecipient(entry)}
                           />
                         </span>
-                        <div className="flex flex-col gap-0.5 min-w-0">
+                        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
                           {member.name && (
-                            <span className="font-mono text-xs text-foreground">
+                            <span className="font-sans text-sm text-foreground truncate leading-tight">
                               {member.name}
                             </span>
                           )}
-                          <span className="font-mono text-xs text-muted-foreground truncate">
+                          <span className="font-mono text-[11px] text-muted-foreground truncate leading-tight">
                             {member.email}
                           </span>
                         </div>
@@ -191,8 +179,8 @@ export function WorkspaceRecipientPicker({
               )}
 
               {isExpanded && workspace.members.length === 0 && (
-                <div className="px-10 py-3 border-t border-border bg-muted/10">
-                  <p className="font-mono text-xs text-muted-foreground">
+                <div className="px-8 sm:px-10 py-3 border-t border-white/6 bg-white/2">
+                  <p className="font-sans text-xs text-muted-foreground italic">
                     No members in this workspace
                   </p>
                 </div>

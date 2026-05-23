@@ -17,31 +17,6 @@ export const metadata: Metadata = {
 
 const MAX_WORKSPACES = 5;
 
-function PageBackdrop() {
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-    >
-      <div
-        className="absolute -top-40 right-[-15%] h-[55vh] w-[55vh] opacity-60"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 45%, rgba(0,0,0,0) 75%)",
-          filter: "blur(40px)",
-        }}
-      />
-      <div
-        className="absolute inset-x-0 bottom-0 h-[40vh]"
-        style={{
-          background:
-            "radial-gradient(60% 100% at 30% 100%, rgba(255,255,255,0.025) 0%, rgba(0,0,0,0) 70%)",
-        }}
-      />
-    </div>
-  );
-}
-
 function PageHeader() {
   return (
     <div className="flex flex-col gap-1.5">
@@ -119,8 +94,7 @@ async function WorkspaceSection() {
 
 export default function WorkspacePage() {
   return (
-    <div className="relative flex flex-col gap-6 sm:gap-7">
-      <PageBackdrop />
+    <div className="flex flex-col gap-6 sm:gap-7">
       <PageHeader />
       <Suspense fallback={<WorkspaceListSkeleton />}>
         <WorkspaceSection />

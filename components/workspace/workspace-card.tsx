@@ -28,12 +28,7 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   const isAtLimit = memberCount >= MAX_MEMBERS;
 
   return (
-    <div className="group relative flex flex-col overflow-hidden border border-white/8 bg-[#0a0a0a] transition-all duration-300 hover:border-white/15 hover:bg-[#0c0c0c]">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-white/4 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-      />
-
+    <div className="group relative flex flex-col overflow-hidden border border-white/8 bg-white/2 transition-all duration-300 hover:border-white/15 hover:bg-white/4">
       <div className="relative flex items-start justify-between gap-3 px-4 sm:px-5 pt-4 sm:pt-5 pb-3.5">
         <div className="flex flex-col gap-1 min-w-0">
           <h3 className="font-sans text-base font-semibold tracking-tight text-foreground truncate">
@@ -54,11 +49,11 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
         />
       </div>
 
-      <div className="relative border-t border-white/6 bg-black/40 px-4 sm:px-5 py-1 flex-1 min-h-16">
+      <div className="relative border-t border-white/6 bg-transparent px-4 sm:px-5 py-1 flex-1 min-h-16">
         <MemberList members={workspace.members} workspaceId={workspace.id} />
       </div>
 
-      <div className="relative border-t border-white/6 bg-[#0a0a0a] px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
+      <div className="relative border-t border-white/6 bg-white/2 px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
         <MemberAddDialog
           workspaceId={workspace.id}
           workspaceName={workspace.name}

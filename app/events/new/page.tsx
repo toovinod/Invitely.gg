@@ -1,7 +1,6 @@
 import { NewEventForm } from "@/components/events/new/new-event-form";
 import { NewEventFormSkeleton } from "@/components/skeletons";
 import { getSession } from "@/lib/auth/client/get-session";
-import { Separator } from "@/components/ui/separator";
 import { WorkspaceWithMembers } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
@@ -17,24 +16,26 @@ export const metadata: Metadata = {
 
 function PageHeader() {
   return (
-    <>
-      <Link
-        href="/events"
-        className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
-      >
-        <ArrowLeft className="h-3 w-3" />
-        Back to events
-      </Link>
-      <div className="flex flex-col gap-1">
-        <h1 className="font-mono text-base font-semibold text-foreground">
+    <div className="flex items-start justify-between gap-3 flex-wrap">
+      <div className="flex flex-col gap-1.5 min-w-0">
+        <h1 className="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
           New event
         </h1>
-        <p className="font-mono text-xs text-muted-foreground">
+        <p className="font-sans text-sm text-muted-foreground leading-relaxed">
           Create an event and send invitations to your contacts.
         </p>
       </div>
-      <Separator className="bg-border" />
-    </>
+      <Link href="/events" className="shrink-0">
+        <Button
+          variant="outline"
+          size="sm"
+          className="font-sans text-sm h-8 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Back to events
+        </Button>
+      </Link>
+    </div>
   );
 }
 
@@ -55,13 +56,28 @@ async function NewEventSection() {
 
   if (totalMembers === 0) {
     return (
-      <div className="border border-dashed border-border px-5 py-8 flex flex-col items-center gap-4 text-center">
-        <p className="font-mono text-sm text-foreground">No contacts yet</p>
-        <p className="font-mono text-xs text-muted-foreground">
-          Add members to a workspace before creating an event.
-        </p>
-        <Link href="/workspace">
-          <Button size="sm" className="font-mono text-xs gap-2">
+      <div className="relative overflow-hidden border border-dashed border-white/8 bg-[#070707] flex flex-col items-center gap-4 px-6 py-12 text-center">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(50% 70% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0) 70%)",
+          }}
+        />
+        <div className="relative flex flex-col gap-1.5 max-w-sm">
+          <h3 className="font-sans text-base font-medium text-foreground">
+            No contacts yet
+          </h3>
+          <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+            Add members to a workspace before creating an event.
+          </p>
+        </div>
+        <Link href="/workspace" className="relative">
+          <Button
+            size="sm"
+            className="font-sans text-sm gap-1.5 h-9 cursor-pointer mt-1"
+          >
             Go to Workspaces
           </Button>
         </Link>
@@ -80,7 +96,7 @@ async function NewEventSection() {
 
 export default function NewEventPage() {
   return (
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+    <div className="flex flex-col gap-6 sm:gap-7 max-w-3xl mx-auto">
       <PageHeader />
       <Suspense fallback={<NewEventFormSkeleton />}>
         <NewEventSection />

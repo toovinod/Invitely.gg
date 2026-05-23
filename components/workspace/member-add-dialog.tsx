@@ -121,7 +121,7 @@ export function MemberAddDialog({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-white/8 bg-[#0a0a0a]">
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden">
         <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
           <DialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Add members
@@ -129,7 +129,7 @@ export function MemberAddDialog({
           <DialogDescription className="font-sans text-sm text-muted-foreground">
             Adding to{" "}
             <span className="text-foreground font-medium">{workspaceName}</span>
-            {" — "}
+            {" —"}
             <span className="font-mono text-xs">
               {currentMemberCount}/{MAX_MEMBERS}
             </span>{" "}
@@ -160,15 +160,15 @@ export function MemberAddDialog({
                 <Input
                   placeholder="Shambavi"
                   value={row.name}
-                  onChange={(e) => updateRow(row.id, "name", e.target.value)}
-                  className="font-sans text-sm h-9 px-3 border-white/8 bg-black/40 focus-visible:border-white/20 focus-visible:ring-white/5"
+                  onChange={(e) => updateRow(row.id,"name", e.target.value)}
+                  className="font-sans text-sm h-9 px-3 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
                 />
                 <Input
                   placeholder="shambavi@gmail.com"
                   type="email"
                   value={row.email}
-                  onChange={(e) => updateRow(row.id, "email", e.target.value)}
-                  className="font-mono text-sm h-9 px-3 border-white/8 bg-black/40 focus-visible:border-white/20 focus-visible:ring-white/5"
+                  onChange={(e) => updateRow(row.id,"email", e.target.value)}
+                  className="font-mono text-sm h-9 px-3 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
                   required
                 />
                 <Button
@@ -218,7 +218,7 @@ export function MemberAddDialog({
             >
               {isLoading
                 ? "Adding..."
-                : `Add ${validCount || ""} member${validCount === 1 ? "" : "s"}`.trim()}
+                : `Add ${validCount ||""} member${validCount === 1 ? "" : "s"}`.trim()}
             </Button>
           </DialogFooter>
         </form>

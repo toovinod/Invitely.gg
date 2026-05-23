@@ -42,7 +42,7 @@ export function WorkspaceDeleteDialog({
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden border-white/8 bg-[#0a0a0a]">
+      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden">
         <AlertDialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
           <AlertDialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Delete workspace

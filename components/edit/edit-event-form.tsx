@@ -1,9 +1,9 @@
 "use client";
 import { EditEventDetails } from "@/components/edit/edit-event-details";
 import { EditEmailContent } from "@/components/edit/edit-email-content";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Check } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -58,7 +58,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
       setIsSaving(true);
       const res = await fetch(`/api/events/${event.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json" },
         body: JSON.stringify({
           name: detailsValues.name,
           desc: detailsValues.desc,
@@ -76,14 +76,14 @@ export function EditEventForm({ event }: EditEventFormProps) {
         return;
       }
       if (data.data.notified) {
-        toast.success("event updated guests notified of changes");
+        toast.success("Event updated — guests notified of changes");
       } else {
-        toast.success("event updated successfully");
+        toast.success("Event updated successfully");
       }
       router.push(`/events/${event.id}`);
       router.refresh();
     } catch {
-      toast.error("failed to update event");
+      toast.error("Failed to update event");
     } finally {
       setIsSaving(false);
     }
@@ -91,27 +91,27 @@ export function EditEventForm({ event }: EditEventFormProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-4 border-b border-white/8 pb-4">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 overflow-x-auto -mx-1 px-1">
           {([1, 2] as Step[]).map((step, index) => {
             const isActive = currentStep === step;
             const isCompleted = currentStep > step;
             return (
-              <div key={step} className="flex items-center">
+              <div key={step} className="flex items-center shrink-0">
                 <div className="flex items-center gap-2">
                   <div
-                    className={`flex h-6 w-6 items-center justify-center border font-mono text-xs font-semibold transition-colors ${
+                    className={`flex h-6 w-6 items-center justify-center border font-mono text-[11px] font-semibold tabular-nums transition-colors ${
                       isActive
                         ? "border-foreground bg-foreground text-background"
                         : isCompleted
-                          ? "border-foreground/40 bg-foreground/10 text-foreground/60"
-                          : "border-border bg-transparent text-muted-foreground"
+                          ? "border-white/15 bg-white/6 text-foreground"
+                          : "border-white/8 bg-transparent text-muted-foreground"
                     }`}
                   >
-                    {isCompleted ? "✓" : step}
+                    {isCompleted ? <Check className="h-3 w-3" /> : step}
                   </div>
                   <span
-                    className={`font-mono text-xs hidden sm:block transition-colors ${
+                    className={`font-sans text-xs font-medium hidden sm:block transition-colors ${
                       isActive ? "text-foreground" : "text-muted-foreground"
                     }`}
                   >
@@ -120,8 +120,8 @@ export function EditEventForm({ event }: EditEventFormProps) {
                 </div>
                 {index < 1 && (
                   <div
-                    className={`mx-3 h-px w-8 transition-colors ${
-                      currentStep > step ? "bg-foreground/40" : "bg-border"
+                    className={`mx-2 sm:mx-3 h-px w-6 sm:w-8 transition-colors ${
+                      currentStep > step ? "bg-white/15" : "bg-white/8"
                     }`}
                   />
                 )}
@@ -132,7 +132,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="font-mono text-xs text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
+          className="font-sans text-sm h-8 text-muted-foreground hover:text-foreground hover:bg-white/4 shrink-0 cursor-pointer"
           onClick={() => router.push(`/events/${event.id}`)}
           disabled={isSaving}
         >
@@ -140,11 +140,14 @@ export function EditEventForm({ event }: EditEventFormProps) {
         </Button>
       </div>
 
-      <Separator className="bg-border" />
-
-      <p className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-        Step {currentStep} — {stepTitles[currentStep]}
-      </p>
+      <div className="flex flex-col gap-1">
+        <p className="font-sans text-[11px] font-medium text-muted-foreground uppercase tracking-[0.18em]">
+          Step {currentStep} of 2
+        </p>
+        <h2 className="font-sans text-lg font-semibold tracking-tight text-foreground">
+          {stepTitles[currentStep]}
+        </h2>
+      </div>
 
       {currentStep === 1 && (
         <EditEventDetails

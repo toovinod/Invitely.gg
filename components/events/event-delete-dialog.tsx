@@ -39,10 +39,10 @@ export function EventDeleteDialog({
         toast.error(data.message);
         return;
       }
-      toast.success("event deleted");
+      toast.success("Event deleted");
       router.refresh();
     } catch {
-      toast.error("failed to delete event");
+      toast.error("Failed to delete event");
     } finally {
       setIsLoading(false);
     }
@@ -53,33 +53,34 @@ export function EventDeleteDialog({
       <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
-          className="cursor-pointer h-7 w-7 p-0 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+          size="icon-sm"
+          className="cursor-pointer h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+          aria-label={`Delete event ${eventName}`}
         >
-          <Trash2 className="h-3 w-3" />
+          <Trash2 className="h-3.5 w-3.5" />
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="font-mono sm:max-w-sm">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="font-mono text-sm">
+      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <AlertDialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <AlertDialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Delete event
           </AlertDialogTitle>
-          <AlertDialogDescription className="font-mono text-xs text-muted-foreground">
+          <AlertDialogDescription className="font-sans text-sm text-muted-foreground">
             This will permanently delete{" "}
-            <span className="text-foreground font-semibold">{eventName}</span>{" "}
-            and all its invitations. This cannot be undone.
+            <span className="text-foreground font-medium">{eventName}</span> and
+            all of its invitations. This cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
+        <AlertDialogFooter className="px-5 sm:px-6 py-4 gap-2">
+          <AlertDialogCancel className="font-sans text-sm h-9 cursor-pointer mt-0 border-white/8 hover:border-white/15 hover:bg-white/4">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isLoading}
-            className="cursor-pointer font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="cursor-pointer font-sans text-sm h-9 bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {isLoading ? "Deleting..." : "Delete event"}
           </AlertDialogAction>

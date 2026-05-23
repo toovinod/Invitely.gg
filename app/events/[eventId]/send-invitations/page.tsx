@@ -1,9 +1,9 @@
 import { SendInvitationsForm } from "@/components/events/send-invitations-form";
 import { Calendar, MapPin, ArrowLeft } from "lucide-react";
 import { getSession } from "@/lib/auth/client/get-session";
-import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
 import { WorkspaceWithMembers } from "@/lib/types";
+import { Button } from "@/components/ui/button";
 import { EventIdParams } from "@/lib/utils";
 import { db } from "@/lib/db/prisma";
 import { Metadata } from "next";
@@ -45,48 +45,62 @@ export default async function SendInvitationsPage({ params }: EventIdParams) {
   });
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-      <Link
-        href={`/events/${eventId}`}
-        className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
-      >
-        <ArrowLeft className="h-3 w-3" />
-        Back to event
-      </Link>
-
-      <div className="flex flex-col gap-1">
-        <h1 className="font-mono text-base font-semibold text-foreground">
-          Send invitations
-        </h1>
-        <p className="font-mono text-xs text-muted-foreground">
-          Select guests for this occurrence of{" "}
-          <span className="text-foreground">{event.name}</span>
-        </p>
+    <div className="flex flex-col gap-6 sm:gap-7 max-w-3xl mx-auto">
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex flex-col gap-1.5 min-w-0">
+          <h1 className="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+            Send invitations
+          </h1>
+          <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+            Select guests for this occurrence of{" "}
+            <span className="text-foreground font-medium">{event.name}</span>
+          </p>
+        </div>
+        <Link href={`/events/${eventId}`} className="shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            className="font-sans text-sm h-8 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to event
+          </Button>
+        </Link>
       </div>
 
-      <div className="border border-border px-4 py-3 flex flex-col gap-2">
+      <div className="border border-white/8 bg-[#0a0a0a] px-4 py-3 flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
-          <span className="font-mono text-xs text-muted-foreground">
+          <Calendar className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+          <span className="font-mono text-xs tabular-nums text-muted-foreground">
             {formattedDate}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
-          <span className="font-mono text-xs text-muted-foreground">
+          <MapPin className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+          <span className="font-sans text-sm text-muted-foreground">
             {event.location}
           </span>
         </div>
       </div>
 
-      <Separator className="bg-border" />
-
       {totalMembers === 0 ? (
-        <div className="border border-dashed border-border px-5 py-8 flex flex-col items-center gap-4 text-center">
-          <p className="font-mono text-sm text-foreground">No contacts yet</p>
-          <p className="font-mono text-xs text-muted-foreground">
-            Add members to a workspace before sending invitations.
-          </p>
+        <div className="relative overflow-hidden border border-dashed border-white/8 bg-[#070707] px-6 py-12 flex flex-col items-center gap-4 text-center">
+          <div className="flex flex-col gap-1.5 max-w-sm">
+            <h3 className="font-sans text-base font-medium text-foreground">
+              No contacts yet
+            </h3>
+            <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+              Add members to a workspace before sending invitations.
+            </p>
+          </div>
+          <Link href="/workspace">
+            <Button
+              size="sm"
+              className="font-sans text-sm h-9 cursor-pointer mt-1"
+            >
+              Go to Workspaces
+            </Button>
+          </Link>
         </div>
       ) : (
         <SendInvitationsForm

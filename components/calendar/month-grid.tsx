@@ -15,12 +15,12 @@ export function MonthGrid({ anchor, events }: MonthGridProps) {
   const cells = buildMonthGrid(anchor, events);
 
   return (
-    <div className="border border-border">
-      <div className="grid grid-cols-7 border-b border-border bg-muted/30">
+    <div className="border border-white/8 overflow-hidden">
+      <div className="grid grid-cols-7 border-b border-white/8 bg-white/2">
         {WEEKDAYS.map((day) => (
           <div
             key={day}
-            className="px-2 py-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground text-center border-r border-border last:border-r-0"
+            className="px-2 py-2 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground text-center border-r border-white/6 last:border-r-0"
           >
             {day}
           </div>
@@ -54,28 +54,28 @@ function DayCellView({ cell, isLastColumn, isLastRow }: DayCellViewProps) {
 
   return (
     <div
-      className={`group relative flex flex-col min-h-24 sm:min-h-28 bg-background ${
-        isLastColumn ? "" : "border-r border-border"
-      } ${isLastRow ? "" : "border-b border-border"} ${
-        cell.inCurrentMonth ? "" : "bg-muted/10"
+      className={`group relative flex flex-col min-h-24 sm:min-h-28 ${
+        isLastColumn ? "" : "border-r border-white/6"
+      } ${isLastRow ? "" : "border-b border-white/6"} ${
+        cell.inCurrentMonth ? "" : "bg-white/1.5"
       }`}
     >
       <div className="flex items-center justify-between px-2 pt-1.5">
         <span
-          className={`font-mono text-[11px] tabular-nums ${
+          className={
             cell.isToday
-              ? "h-5 w-5 flex items-center justify-center bg-foreground text-background font-semibold"
+              ? "h-5 w-5 flex items-center justify-center bg-foreground text-background font-mono text-[11px] font-semibold tabular-nums rounded-full"
               : cell.inCurrentMonth
-                ? "text-foreground"
-                : "text-muted-foreground/50"
-          }`}
+                ? "font-mono text-[11px] tabular-nums text-foreground"
+                : "font-mono text-[11px] tabular-nums text-muted-foreground/50"
+          }
         >
           {dayNumber}
         </span>
         {cell.events.length === 0 && cell.inCurrentMonth && (
           <Link
             href={`/events/new?date=${toDateKey(cell.date)}`}
-            className="opacity-0 group-hover:opacity-100 transition-opacity font-mono text-[10px] text-muted-foreground hover:text-foreground px-1"
+            className="opacity-0 group-hover:opacity-100 transition-opacity font-mono text-xs text-muted-foreground hover:text-foreground px-1.5"
             aria-label={`Create event on ${toDateKey(cell.date)}`}
           >
             +

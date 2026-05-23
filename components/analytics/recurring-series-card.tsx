@@ -1,12 +1,4 @@
 import { RecurringSeriesStats } from "@/lib/analytics/types";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import Link from "next/link";
 import {
   RefreshCw,
@@ -36,49 +28,51 @@ function getTrend(counts: number[]): Trend {
 
 const trendStyles: Record<
   Trend,
-  { icon: typeof TrendingUp; className: string; label: string }
+  { icon: typeof TrendingUp; pillClass: string; label: string }
 > = {
   up: {
     icon: TrendingUp,
-    className: "text-green-500 border-green-500/20 bg-green-500/5",
+    pillClass: "border-sky-400/25 bg-sky-400/10 text-sky-400",
     label: "Up",
   },
   down: {
     icon: TrendingDown,
-    className: "text-destructive border-destructive/20 bg-destructive/5",
+    pillClass: "border-destructive/30 bg-destructive/10 text-destructive",
     label: "Down",
   },
   flat: {
     icon: Minus,
-    className: "text-muted-foreground border-border bg-muted/20",
+    pillClass: "border-white/8 bg-white/3 text-muted-foreground",
     label: "Flat",
   },
 };
 
 export function RecurringSeriesCard({ series }: RecurringSeriesCardProps) {
   return (
-    <Card>
-      <CardHeader className="border-b">
-        <CardTitle className="font-mono text-sm flex items-center gap-2">
-          <Repeat className="h-3.5 w-3.5 text-muted-foreground" />
-          Recurring series
-        </CardTitle>
-        <CardDescription className="font-mono text-xs">
-          {series.length === 0
-            ? "Track attendance trends across your repeating events"
-            : `${series.length} active series · attendance trend per occurrence`}
-        </CardDescription>
-      </CardHeader>
+    <div className="relative overflow-hidden border border-white/8 bg-white/2 flex flex-col">
+      <div className="flex items-start justify-between gap-3 px-4 sm:px-5 pt-4 sm:pt-5 pb-3.5 border-b border-white/6">
+        <div className="flex flex-col gap-1 min-w-0">
+          <h3 className="font-sans text-base font-semibold tracking-tight text-foreground flex items-center gap-2">
+            <Repeat className="h-3.5 w-3.5 text-muted-foreground" />
+            Recurring series
+          </h3>
+          <p className="font-sans text-sm text-muted-foreground">
+            {series.length === 0
+              ? "Track attendance trends across your repeating events"
+              : `${series.length} active series · attendance trend per occurrence`}
+          </p>
+        </div>
+      </div>
 
       {series.length === 0 ? (
-        <CardContent className="flex flex-col items-center justify-center py-12 gap-2">
-          <p className="font-mono text-xs text-muted-foreground text-center max-w-sm">
+        <div className="flex flex-col items-center justify-center py-12 gap-2 px-4">
+          <p className="font-sans text-sm text-muted-foreground text-center max-w-sm leading-relaxed">
             No recurring events yet. Set a recurrence on any event to track its
             attendance over time.
           </p>
-        </CardContent>
+        </div>
       ) : (
-        <CardContent className="flex flex-col p-0">
+        <div className="flex flex-col">
           {series.map((s) => {
             const trend = getTrend(s.recentAttendingCounts);
             const trendStyle = trendStyles[trend];
@@ -91,24 +85,21 @@ export function RecurringSeriesCard({ series }: RecurringSeriesCardProps) {
             return (
               <div
                 key={s.parentEventId}
-                className="flex items-center gap-3 px-6 py-3 border-b last:border-b-0 hover:bg-muted/40 transition-colors"
+                className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-white/6 last:border-b-0 hover:bg-white/3 transition-colors"
               >
                 <div className="flex flex-col min-w-0 flex-1 gap-1">
                   <Link
                     href={`/events/${s.parentEventId}`}
-                    className="font-mono text-xs text-foreground hover:underline underline-offset-4 truncate flex items-center gap-1.5 font-medium"
+                    className="font-sans text-sm text-foreground hover:underline underline-offset-4 truncate flex items-center gap-1.5 font-medium"
                   >
                     {s.seriesName}
                     <RefreshCw className="h-2.5 w-2.5 text-muted-foreground shrink-0" />
                   </Link>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className="font-mono text-[10px] h-4 px-1.5 capitalize"
-                    >
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="inline-flex items-center gap-1 border border-white/8 bg-white/3 text-muted-foreground px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide">
                       {s.recurrence}
-                    </Badge>
-                    <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                    </span>
+                    <span className="inline-flex items-center gap-1 border border-white/8 bg-white/3 text-muted-foreground px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide tabular-nums">
                       {s.occurrenceCount} sent
                     </span>
                   </div>
@@ -116,47 +107,46 @@ export function RecurringSeriesCard({ series }: RecurringSeriesCardProps) {
 
                 <Sparkline counts={s.recentAttendingCounts} />
 
-                <div className="flex flex-col items-end shrink-0 w-16">
-                  <span className="font-mono text-sm text-foreground tabular-nums font-medium">
+                <div className="hidden sm:flex flex-col items-end shrink-0 w-16">
+                  <span className="font-mono text-base font-semibold tabular-nums text-foreground leading-none">
                     {avgAttending}
                   </span>
-                  <span className="font-mono text-[10px] text-muted-foreground">
+                  <span className="font-sans text-[10px] uppercase tracking-[0.18em] text-muted-foreground mt-1">
                     avg going
                   </span>
                 </div>
 
-                <Badge
-                  variant="outline"
-                  className={`font-mono text-[10px] gap-1 ${trendStyle.className}`}
+                <span
+                  className={`inline-flex items-center gap-1 border px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide ${trendStyle.pillClass}`}
                 >
                   <TrendIcon className="h-3 w-3" />
                   {trendStyle.label}
-                </Badge>
+                </span>
               </div>
             );
           })}
-        </CardContent>
+        </div>
       )}
-    </Card>
+    </div>
   );
 }
 
 function Sparkline({ counts }: { counts: number[] }) {
   if (counts.length === 0) {
-    return <div className="w-16 h-6" />;
+    return <div className="w-20 h-7" />;
   }
   const max = Math.max(...counts, 1);
   return (
     <div
-      className="hidden sm:flex items-end gap-0.5 h-6 w-16 shrink-0"
+      className="hidden sm:flex items-end gap-px h-7 w-20 shrink-0"
       aria-hidden="true"
     >
       {counts.map((count, i) => {
-        const heightPct = Math.max(8, Math.round((count / max) * 100));
+        const heightPct = Math.max(12, Math.round((count / max) * 100));
         return (
           <div
             key={i}
-            className="flex-1 bg-foreground/70"
+            className="flex-1 bg-foreground/60 min-h-1"
             style={{ height: `${heightPct}%` }}
           />
         );

@@ -1,5 +1,4 @@
 import { TemplateDeleteDialog } from "@/components/templates/template-delete-dialog";
-import { Badge } from "@/components/ui/badge";
 import { FileText } from "lucide-react";
 
 interface TemplateCardProps {
@@ -16,25 +15,22 @@ interface TemplateCardProps {
 
 export function TemplateCard({ template, onDeleted }: TemplateCardProps) {
   const preview =
-    template.emailBody.length > 100
-      ? template.emailBody.slice(0, 100) + "..."
+    template.emailBody.length > 160
+      ? template.emailBody.slice(0, 160) + "..."
       : template.emailBody;
 
   return (
-    <div className="border border-border bg-card hover:border-foreground/20 transition-colors">
-      <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
-        <div className="flex items-center gap-2 min-w-0">
-          <FileText className="h-3 w-3 text-muted-foreground shrink-0" />
-          <h3 className="font-mono text-xs font-semibold text-foreground truncate">
+    <div className="group relative flex flex-col overflow-hidden border border-white/8 bg-white/2 transition-all duration-300 hover:border-white/15 hover:bg-white/4">
+      <div className="flex items-center justify-between gap-3 px-4 sm:px-5 pt-4 sm:pt-5 pb-3.5 border-b border-white/6">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <FileText className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
+          <h3 className="font-sans text-base font-semibold tracking-tight text-foreground truncate">
             {template.name}
           </h3>
           {template.event && (
-            <Badge
-              variant="outline"
-              className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none border-border text-muted-foreground shrink-0"
-            >
+            <span className="inline-flex items-center gap-1 border px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide border-white/8 bg-white/3 text-muted-foreground shrink-0 truncate max-w-[40%]">
               {template.event.name}
-            </Badge>
+            </span>
           )}
         </div>
         <TemplateDeleteDialog
@@ -44,11 +40,11 @@ export function TemplateCard({ template, onDeleted }: TemplateCardProps) {
         />
       </div>
 
-      <div className="px-4 py-3 flex flex-col gap-1">
-        <p className="font-mono text-xs text-foreground truncate">
+      <div className="px-4 sm:px-5 py-4 flex flex-col gap-1.5">
+        <p className="font-sans text-sm text-foreground truncate">
           {template.emailSubject}
         </p>
-        <p className="font-mono text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+        <p className="font-sans text-xs text-muted-foreground leading-relaxed line-clamp-2">
           {preview}
         </p>
       </div>

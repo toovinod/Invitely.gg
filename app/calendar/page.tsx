@@ -37,7 +37,17 @@ export default async function CalendarPage({
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 sm:gap-7">
+      <div className="flex flex-col gap-1.5">
+        <h1 className="font-sans text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+          Calendar
+        </h1>
+        <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-xl">
+          See every upcoming event at a glance switch between month and agenda,
+          or subscribe to keep your favourite calendar app in sync.
+        </p>
+      </div>
+
       <CalendarShell
         view={view}
         anchorIso={anchor.toISOString()}

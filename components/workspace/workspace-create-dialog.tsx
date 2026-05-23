@@ -54,7 +54,7 @@ export function WorkspaceCreateDialog({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden border-white/8 bg-[#0a0a0a]">
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
         <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
           <DialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Create workspace
@@ -84,7 +84,7 @@ export function WorkspaceCreateDialog({
               placeholder="e.g. College, Office, Family"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="font-sans text-sm h-10 px-3 border-white/8 bg-black/40 focus-visible:border-white/20 focus-visible:ring-white/5"
+              className="font-sans text-sm h-10 px-3 border-white/8 bg-transparent focus-visible:border-white/20 focus-visible:ring-white/5"
               maxLength={50}
               autoFocus
             />

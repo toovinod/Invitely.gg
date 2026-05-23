@@ -42,7 +42,7 @@ function formatShortDate(date: Date): string {
 export function TrendChart({ points }: TrendChartProps) {
   if (points.length === 0) {
     return (
-      <div className="aspect-auto h-65 w-full flex items-center justify-center font-mono text-xs text-muted-foreground/60">
+      <div className="aspect-auto h-72 w-full flex items-center justify-center font-sans text-sm text-muted-foreground/60">
         No sent events yet
       </div>
     );
@@ -59,26 +59,27 @@ export function TrendChart({ points }: TrendChartProps) {
   }));
 
   return (
-    <ChartContainer
-      config={config}
-      className="aspect-auto h-65 w-full font-mono"
-    >
+    <ChartContainer config={config} className="aspect-auto h-72 w-full">
       <AreaChart data={data} margin={{ left: 8, right: 8, top: 8, bottom: 0 }}>
         <defs>
           <linearGradient id="fillResponseRate" x1="0" y1="0" x2="0" y2="1">
             <stop
               offset="5%"
               stopColor="var(--color-responseRate)"
-              stopOpacity={0.4}
+              stopOpacity={0.35}
             />
             <stop
               offset="95%"
               stopColor="var(--color-responseRate)"
-              stopOpacity={0.05}
+              stopOpacity={0.02}
             />
           </linearGradient>
         </defs>
-        <CartesianGrid vertical={false} className="stroke-border" />
+        <CartesianGrid
+          vertical={false}
+          strokeDasharray="2 4"
+          className="stroke-white/6"
+        />
         <XAxis
           dataKey="label"
           tickLine={false}
@@ -111,7 +112,9 @@ export function TrendChart({ points }: TrendChartProps) {
                 if (!datum) return null;
                 return (
                   <div className="flex w-full items-center justify-between gap-3">
-                    <span className="text-muted-foreground">Response rate</span>
+                    <span className="font-sans text-muted-foreground">
+                      Response rate
+                    </span>
                     <span className="text-foreground font-mono tabular-nums font-medium">
                       {value}% · {datum.attending}/{datum.total} going
                     </span>
@@ -125,8 +128,10 @@ export function TrendChart({ points }: TrendChartProps) {
           dataKey="responseRate"
           type="monotone"
           fill="url(#fillResponseRate)"
-          stroke="var(--color-responseRate)"
+          stroke="var(--foreground)"
           strokeWidth={2}
+          dot={{ r: 2.5, fill: "var(--foreground)", strokeWidth: 0 }}
+          activeDot={{ r: 4, strokeWidth: 0 }}
         />
       </AreaChart>
     </ChartContainer>

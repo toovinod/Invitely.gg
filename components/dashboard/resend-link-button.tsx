@@ -17,7 +17,7 @@ export function ResendLinkButton({ eventId, email }: ResendLinkButtonProps) {
       setIsLoading(true);
       const res = await fetch(`/api/events/${eventId}/resend-link`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
@@ -27,7 +27,7 @@ export function ResendLinkButton({ eventId, email }: ResendLinkButtonProps) {
       }
       toast.success(data.message);
     } catch {
-      toast.error("failed to resend link");
+      toast.error("Failed to resend link");
     } finally {
       setIsLoading(false);
     }
@@ -36,12 +36,14 @@ export function ResendLinkButton({ eventId, email }: ResendLinkButtonProps) {
   return (
     <Button
       variant="ghost"
-      size="sm"
-      className="font-mono text-xs h-7 px-2 text-muted-foreground hover:text-foreground cursor-pointer"
+      size="icon-sm"
+      className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-white/4 cursor-pointer"
       onClick={handleResend}
       disabled={isLoading}
+      title="Resend invitation link"
+      aria-label="Resend invitation link"
     >
-      <Send className="h-3 w-3" />
+      <Send className="h-3.5 w-3.5" />
     </Button>
   );
 }

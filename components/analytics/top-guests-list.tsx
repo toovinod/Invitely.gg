@@ -1,13 +1,5 @@
 import { GuestAggregate } from "@/lib/analytics/types";
 import { Crown, GhostIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 interface TopGuestsListProps {
   title: string;
@@ -20,13 +12,18 @@ interface TopGuestsListProps {
 const variantConfig = {
   engaged: {
     icon: Crown,
-    badgeClass: "border-green-500/20 text-green-500 bg-green-500/5",
+    pillClass: "border-sky-400/25 bg-sky-400/10 text-sky-400",
   },
   ghosters: {
     icon: GhostIcon,
-    badgeClass: "border-destructive/20 text-destructive bg-destructive/5",
+    pillClass: "border-destructive/30 bg-destructive/10 text-destructive",
   },
 } as const;
+
+function initialOf(guest: GuestAggregate): string {
+  const source = guest.name?.trim() || guest.email;
+  return source.charAt(0).toUpperCase() || "?";
+}
 
 export function TopGuestsList({
   title,
@@ -36,76 +33,68 @@ export function TopGuestsList({
   emptyMessage,
 }: TopGuestsListProps) {
   const Icon = variantConfig[variant].icon;
-  const badgeClass = variantConfig[variant].badgeClass;
+  const pillClass = variantConfig[variant].pillClass;
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="border-b">
-        <CardTitle className="font-mono text-sm flex items-center gap-2">
-          <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-          {title}
-        </CardTitle>
-        <CardDescription className="font-mono text-xs">
-          {subtitle}
-        </CardDescription>
-      </CardHeader>
+    <div className="relative overflow-hidden border border-white/8 bg-white/2 flex flex-col">
+      <div className="flex items-start justify-between gap-3 px-4 sm:px-5 pt-4 sm:pt-5 pb-3.5 border-b border-white/6">
+        <div className="flex flex-col gap-1 min-w-0">
+          <h3 className="font-sans text-base font-semibold tracking-tight text-foreground flex items-center gap-2">
+            <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+            {title}
+          </h3>
+          <p className="font-sans text-sm text-muted-foreground">{subtitle}</p>
+        </div>
+      </div>
 
       {guests.length === 0 ? (
-        <CardContent className="flex flex-col items-center justify-center py-12 gap-2">
-          <p className="font-mono text-xs text-muted-foreground text-center max-w-sm">
+        <div className="flex flex-col items-center justify-center py-12 gap-2 px-4">
+          <p className="font-sans text-sm text-muted-foreground text-center max-w-sm leading-relaxed">
             {emptyMessage}
           </p>
-        </CardContent>
+        </div>
       ) : (
-        <CardContent className="flex flex-col p-0">
+        <div className="flex flex-col">
           {guests.map((guest, index) => (
             <div
               key={guest.email}
-              className="flex items-center gap-3 px-6 py-2.5 border-b last:border-b-0 hover:bg-muted/40 transition-colors"
+              className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-white/6 last:border-b-0 hover:bg-white/3 transition-colors"
             >
-              <span className="font-mono text-[10px] text-muted-foreground tabular-nums w-5 shrink-0">
+              <span className="font-mono text-[11px] text-muted-foreground tabular-nums w-6 shrink-0 text-right">
                 {String(index + 1).padStart(2, "0")}
               </span>
+              <div className="h-7 w-7 rounded-full border border-white/8 bg-white/4 flex items-center justify-center shrink-0">
+                <span className="font-sans text-xs font-medium text-foreground uppercase">
+                  {initialOf(guest)}
+                </span>
+              </div>
               <div className="flex flex-col min-w-0 flex-1">
-                <span className="font-mono text-xs text-foreground truncate font-medium">
+                <span className="font-sans text-sm text-foreground truncate font-medium">
                   {guest.name ?? guest.email}
                 </span>
                 {guest.name && (
-                  <span className="font-mono text-[10px] text-muted-foreground truncate">
+                  <span className="font-mono text-xs text-muted-foreground truncate tabular-nums">
                     {guest.email}
                   </span>
                 )}
               </div>
 
-              {variant === "engaged" ? (
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="font-mono text-[10px] text-muted-foreground tabular-nums hidden sm:inline">
-                    {guest.invitedCount} invites
-                  </span>
-                  <Badge
-                    variant="outline"
-                    className={`font-mono text-[10px] tabular-nums ${badgeClass}`}
-                  >
-                    {guest.attendingCount} going
-                  </Badge>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="font-mono text-[10px] text-muted-foreground tabular-nums hidden sm:inline">
-                    {guest.invitedCount} invites
-                  </span>
-                  <Badge
-                    variant="outline"
-                    className={`font-mono text-[10px] tabular-nums ${badgeClass}`}
-                  >
-                    {guest.pendingCount} ignored
-                  </Badge>
-                </div>
-              )}
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="font-mono text-xs text-muted-foreground tabular-nums hidden sm:inline">
+                  {guest.invitedCount} invites
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1 border px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide tabular-nums ${pillClass}`}
+                >
+                  {variant === "engaged"
+                    ? `${guest.attendingCount} going`
+                    : `${guest.pendingCount} ignored`}
+                </span>
+              </div>
             </div>
           ))}
-        </CardContent>
+        </div>
       )}
-    </Card>
+    </div>
   );
 }

@@ -1,8 +1,7 @@
 "use client";
-import { Separator } from "@/components/ui/separator";
+import { Users, Send, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Users, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -91,7 +90,7 @@ export function SendInvitationsForm({
 
   async function handleSend() {
     if (selectedRecipients.size === 0) {
-      toast.error("select at least one recipient");
+      toast.error("Select at least one recipient");
       return;
     }
     try {
@@ -110,30 +109,37 @@ export function SendInvitationsForm({
       if (res.status === 207) {
         toast.warning(data.message);
       } else {
-        toast.success(`invitations sent to ${data.sent} guests`);
+        toast.success(`Invitations sent to ${data.sent} guests`);
       }
       router.push(`/events/${eventId}`);
       router.refresh();
     } catch {
-      toast.error("something went wrong. please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsSending(false);
     }
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <p className="font-mono text-xs text-muted-foreground">
-          {selectedCount === 0
-            ? "No guests selected"
-            : `${selectedCount} guest${selectedCount === 1 ? "" : "s"} selected`}
+    <div className="flex flex-col gap-5">
+      <div className="flex items-center justify-between gap-3 flex-wrap border-b border-white/8 pb-3">
+        <p className="font-sans text-sm text-muted-foreground">
+          {selectedCount === 0 ? (
+            "No guests selected"
+          ) : (
+            <>
+              <span className="font-mono tabular-nums text-foreground">
+                {selectedCount}
+              </span>{" "}
+              guest{selectedCount === 1 ? "" : "s"} selected
+            </>
+          )}
         </p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
-            className="font-mono text-xs h-7"
+            className="font-sans text-sm h-8 text-muted-foreground hover:text-foreground hover:bg-white/4 cursor-pointer"
             onClick={selectAll}
             disabled={isSending}
           >
@@ -143,7 +149,7 @@ export function SendInvitationsForm({
             <Button
               variant="ghost"
               size="sm"
-              className="font-mono text-xs h-7 text-muted-foreground"
+              className="font-sans text-sm h-8 text-muted-foreground hover:text-foreground hover:bg-white/4 cursor-pointer"
               onClick={clearAll}
               disabled={isSending}
             >
@@ -161,23 +167,26 @@ export function SendInvitationsForm({
           const someSelected =
             !allSelected &&
             workspace.members.some((m) => selectedRecipients.has(m.email));
+          const selectedHere = workspace.members.filter((m) =>
+            selectedRecipients.has(m.email),
+          ).length;
 
           return (
             <div key={workspace.id} className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="h-3 w-3 text-muted-foreground" />
-                  <span className="font-mono text-xs font-semibold text-foreground">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Users className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <span className="font-sans text-sm font-medium text-foreground truncate">
                     {workspace.name}
                   </span>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {workspace.members.length} members
+                  <span className="font-mono text-xs tabular-nums text-muted-foreground shrink-0">
+                    {workspace.members.length}
                   </span>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="font-mono text-xs h-6 px-2"
+                  className="font-sans text-xs h-7 text-muted-foreground hover:text-foreground hover:bg-white/4 cursor-pointer"
                   onClick={() => toggleWorkspace(workspace.members)}
                   disabled={isSending}
                 >
@@ -185,7 +194,7 @@ export function SendInvitationsForm({
                 </Button>
               </div>
 
-              <div className="border border-border divide-y divide-border">
+              <div className="border border-white/8 bg-white/2 divide-y divide-white/6 overflow-hidden">
                 {workspace.members.map((member) => {
                   const isSelected = selectedRecipients.has(member.email);
                   return (
@@ -194,19 +203,19 @@ export function SendInvitationsForm({
                       type="button"
                       onClick={() => toggleRecipient(member)}
                       disabled={isSending}
-                      className={`w-full flex items-center justify-between px-4 py-2.5 transition-colors text-left ${
-                        isSelected ? "bg-foreground/5" : "hover:bg-muted/30"
+                      className={`w-full flex items-center justify-between px-3 sm:px-4 py-2.5 transition-colors text-left ${
+                        isSelected ? "bg-white/4" : "hover:bg-white/2"
                       }`}
                     >
                       <div className="flex flex-col gap-0.5 min-w-0">
-                        <span className="font-mono text-xs text-foreground truncate">
+                        <span className="font-sans text-sm text-foreground truncate leading-tight">
                           {member.name ?? (
                             <span className="text-muted-foreground italic">
                               No name
                             </span>
                           )}
                         </span>
-                        <span className="font-mono text-xs text-muted-foreground truncate">
+                        <span className="font-mono text-[11px] text-muted-foreground truncate leading-tight">
                           {member.email}
                         </span>
                       </div>
@@ -214,13 +223,11 @@ export function SendInvitationsForm({
                         className={`h-4 w-4 border shrink-0 ml-3 flex items-center justify-center transition-colors ${
                           isSelected
                             ? "border-foreground bg-foreground"
-                            : "border-border"
+                            : "border-white/15"
                         }`}
                       >
                         {isSelected && (
-                          <span className="text-background text-xs font-bold leading-none">
-                            ✓
-                          </span>
+                          <Check className="h-3 w-3 text-background" />
                         )}
                       </div>
                     </button>
@@ -229,13 +236,15 @@ export function SendInvitationsForm({
               </div>
 
               {someSelected && (
-                <p className="font-mono text-xs text-muted-foreground">
-                  {
-                    workspace.members.filter((m) =>
-                      selectedRecipients.has(m.email),
-                    ).length
-                  }{" "}
-                  of {workspace.members.length} selected
+                <p className="font-sans text-xs text-muted-foreground">
+                  <span className="font-mono tabular-nums text-foreground">
+                    {selectedHere}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-mono tabular-nums">
+                    {workspace.members.length}
+                  </span>{" "}
+                  selected
                 </p>
               )}
             </div>
@@ -243,25 +252,24 @@ export function SendInvitationsForm({
         })}
       </div>
 
-      <Separator className="bg-border" />
-
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pt-4 gap-2 flex-wrap border-t border-white/8 pt-4">
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs"
+          className="font-sans text-sm h-9 gap-1.5 cursor-pointer border-white/8 hover:border-white/15 hover:bg-white/4"
           onClick={() => router.push(`/events/${eventId}`)}
           disabled={isSending}
         >
+          <ArrowLeft className="h-3.5 w-3.5" />
           Cancel
         </Button>
         <Button
           size="sm"
-          className="font-mono text-xs gap-2"
+          className="font-sans text-sm h-9 gap-1.5 cursor-pointer"
           onClick={handleSend}
           disabled={isSending || selectedCount === 0}
         >
-          <Send className="h-3 w-3" />
+          <Send className="h-3.5 w-3.5" />
           {isSending
             ? "Sending..."
             : `Send to ${selectedCount} guest${selectedCount === 1 ? "" : "s"}`}

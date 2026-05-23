@@ -47,10 +47,10 @@ export function UnscheduleButton({
         toast.error(data.message);
         return;
       }
-      toast.success("scheduled send cancelled");
+      toast.success("Scheduled send cancelled");
       router.refresh();
     } catch {
-      toast.error("failed to cancel scheduled send");
+      toast.error("Failed to cancel scheduled send");
     } finally {
       setIsLoading(false);
     }
@@ -62,34 +62,34 @@ export function UnscheduleButton({
         <Button
           variant="outline"
           size="sm"
-          className="cursor-pointer font-mono text-xs h-8 gap-2 text-blue-500 border-blue-500/30 hover:border-blue-500/60 hover:text-blue-400"
+          className="cursor-pointer font-sans text-sm h-8 gap-1.5 border-white/8 text-muted-foreground hover:text-foreground hover:border-white/15 hover:bg-white/4"
         >
-          <CalendarX className="h-3 w-3" />
+          <CalendarX className="h-3.5 w-3.5" />
           Unschedule
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="font-mono sm:max-w-sm">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="font-mono text-sm">
+      <AlertDialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <AlertDialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/6">
+          <AlertDialogTitle className="font-sans text-base font-semibold tracking-tight text-foreground">
             Cancel scheduled send
           </AlertDialogTitle>
-          <AlertDialogDescription className="font-mono text-xs text-muted-foreground">
+          <AlertDialogDescription className="font-sans text-sm text-muted-foreground">
             This will cancel the send scheduled for{" "}
-            <span className="text-foreground font-semibold">
+            <span className="font-mono text-foreground">
               {formattedSchedule}
             </span>
-            . All pending invitations will be removed. You can send manually
-            anytime.
+            . All pending invitations will be removed. You can still send
+            manually anytime.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
+        <AlertDialogFooter className="px-5 sm:px-6 py-4 gap-2">
+          <AlertDialogCancel className="font-sans text-sm h-9 cursor-pointer mt-0 border-white/8 hover:border-white/15 hover:bg-white/4">
             Keep schedule
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleUnschedule}
             disabled={isLoading}
-            className="cursor-pointer font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="cursor-pointer font-sans text-sm h-9 bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {isLoading ? "Cancelling..." : "Cancel schedule"}
           </AlertDialogAction>
