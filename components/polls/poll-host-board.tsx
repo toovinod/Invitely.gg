@@ -26,7 +26,7 @@ const confidenceStyles: Record<
   { className: string; label: string }
 > = {
   high: {
-    className: "border-sky-400/25 bg-sky-400/10 text-sky-400",
+    className: "border-white/25 bg-white/10 text-foreground",
     label: "High",
   },
   medium: {

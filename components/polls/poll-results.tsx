@@ -135,7 +135,7 @@ export function PollResults({
                       {formatSlot(option.startAt)}
                     </span>
                     {isLeader && (
-                      <span className="inline-flex items-center gap-1 border border-sky-400/25 bg-sky-400/10 text-sky-400 px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide">
+                      <span className="inline-flex items-center gap-1 border border-white/25 bg-white/10 text-foreground px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide">
                         <Crown className="h-2.5 w-2.5" />
                         Leader
                       </span>

@@ -21,7 +21,7 @@ const trendStyles: Record<
 > = {
   improving: {
     icon: TrendingUp,
-    pillClass: "border-sky-400/25 bg-sky-400/10 text-sky-400",
+    pillClass: "border-white/25 bg-white/10 text-foreground",
     label: "Improving",
   },
   declining: {
@@ -70,7 +70,7 @@ export function AiSummaryCard({ range }: AiSummaryCardProps) {
     <div className="relative overflow-hidden border border-white/8 bg-white/2 flex flex-col">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"
       />
 
       <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-3.5 flex items-start justify-between gap-3 flex-wrap border-b border-white/6">

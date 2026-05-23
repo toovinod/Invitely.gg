@@ -119,29 +119,34 @@ function SummaryTile({ spec }: { spec: CardSpec }) {
   const Icon = spec.icon;
 
   return (
-    <div className="relative overflow-hidden border border-white/8 bg-white/2 hover:border-white/15 hover:bg-white/4 transition-all duration-300 px-4 sm:px-5 py-4 flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <span className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground flex items-center gap-1.5">
-          <Icon className="h-3 w-3" />
+    <div className="relative overflow-hidden border border-white/8 bg-white/2 hover:border-white/15 hover:bg-white/4 transition-all duration-300 px-4 sm:px-5 py-4 sm:py-5 flex flex-col gap-4 min-h-40">
+      {/* eyebrow */}
+      <div className="flex items-center gap-1.5">
+        <Icon className="h-3 w-3 text-muted-foreground/80 shrink-0" />
+        <span className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
           {spec.title}
         </span>
+      </div>
+
+      {/* big number */}
+      <div className="flex items-end justify-between gap-2 -mt-1">
+        <span className="font-mono text-3xl sm:text-[2rem] font-semibold tabular-nums tracking-tight text-foreground leading-none">
+          {spec.value}
+        </span>
         <span
-          className={`inline-flex items-center gap-1 border px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide tabular-nums ${trendStyle.pillClass}`}
+          className={`inline-flex items-center gap-1 border px-1.5 h-5 font-mono text-[10px] uppercase tracking-wide tabular-nums shrink-0 ${trendStyle.pillClass}`}
         >
           <TrendIcon className="h-3 w-3" />
           {spec.trendLabel}
         </span>
       </div>
 
-      <div className="font-mono text-2xl sm:text-3xl font-semibold tabular-nums tracking-tight text-foreground leading-none">
-        {spec.value}
-      </div>
-
+      {/* description + hint */}
       <div className="flex flex-col gap-0.5 mt-auto">
         <p className="font-sans text-xs text-foreground line-clamp-1">
           {spec.description}
         </p>
-        <p className="font-mono text-[10px] text-muted-foreground tabular-nums">
+        <p className="font-mono text-[10px] text-muted-foreground tabular-nums line-clamp-1">
           {spec.hint}
         </p>
       </div>
@@ -158,7 +163,7 @@ const trendStyles: Record<
 > = {
   up: {
     icon: TrendingUp,
-    pillClass: "border-sky-400/25 bg-sky-400/10 text-sky-400",
+    pillClass: "border-white/25 bg-white/10 text-foreground",
   },
   down: {
     icon: TrendingDown,

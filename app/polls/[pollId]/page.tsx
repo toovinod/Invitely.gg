@@ -37,7 +37,7 @@ function StatusPill({
     tone === "destructive"
       ? "border-destructive/30 bg-destructive/10 text-destructive"
       : tone === "success"
-        ? "border-sky-400/25 bg-sky-400/10 text-sky-400"
+        ? "border-white/25 bg-white/10 text-foreground"
         : tone === "muted"
           ? "border-white/8 bg-white/3 text-muted-foreground"
           : "border-white/15 bg-white/6 text-foreground";
@@ -112,12 +112,12 @@ async function PollDetailBody({ pollId, userId }: PollDetailBodyProps) {
       </div>
 
       {detail.status === "finalized" && detail.finalEventId && (
-        <div className="border border-sky-400/25 bg-sky-400/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="border border-white/15 bg-white/3 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3">
-            <CheckCircle2 className="h-4 w-4 text-sky-400 shrink-0 mt-0.5" />
+            <CheckCircle2 className="h-4 w-4 text-foreground shrink-0 mt-0.5" />
             <div className="flex flex-col gap-0.5">
-              <p className="font-sans text-sm font-medium text-sky-400">
-                Locked in event created
+              <p className="font-sans text-sm font-medium text-foreground">
+                Locked in — event created
               </p>
               <p className="font-sans text-xs text-muted-foreground">
                 {detail.finalEventName ?? "Your event"} is ready to send.

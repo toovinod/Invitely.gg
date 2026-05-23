@@ -16,7 +16,7 @@ export function EventChip({ event, variant = "month" }: EventChipProps) {
   const dotClass = isCancelled
     ? "bg-destructive"
     : isScheduled
-      ? "bg-blue-500"
+      ? "bg-foreground/50"
       : isPast
         ? "bg-muted-foreground/40"
         : "bg-foreground";

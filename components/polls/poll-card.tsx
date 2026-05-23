@@ -17,7 +17,7 @@ function StatusPill({
     tone === "destructive"
       ? "border-destructive/30 bg-destructive/10 text-destructive"
       : tone === "success"
-        ? "border-sky-400/25 bg-sky-400/10 text-sky-400"
+        ? "border-white/25 bg-white/10 text-foreground"
         : "border-white/15 bg-white/6 text-foreground";
   return (
     <span
@@ -106,7 +106,7 @@ export function PollCard({ poll }: PollCardProps) {
           </div>
 
           {poll.status === "finalized" && (
-            <div className="flex items-center gap-2 text-sky-400">
+            <div className="flex items-center gap-2 text-foreground">
               <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
               <span className="font-sans text-xs">
                 Locked &amp; event created

@@ -203,7 +203,7 @@ export function SendInvitationsForm({
                       type="button"
                       onClick={() => toggleRecipient(member)}
                       disabled={isSending}
-                      className={`w-full flex items-center justify-between px-3 sm:px-4 py-2.5 transition-colors text-left ${
+                      className={`w-full flex items-center justify-between px-3 sm:px-4 py-2.5 transition-colors text-left cursor-pointer disabled:cursor-not-allowed ${
                         isSelected ? "bg-white/4" : "hover:bg-white/2"
                       }`}
                     >
