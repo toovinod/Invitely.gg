@@ -22,9 +22,9 @@ export function EmailPreview() {
 
           <div className="relative">
             <div className="absolute -inset-2 bg-linear-to-b from-white/2 to-transparent blur-2xl opacity-40" />
-            <div className="relative border border-white/8 bg-[#0a0a0a] overflow-hidden">
+            <div className="relative border border-white/8  overflow-hidden">
               <Image
-                src="/email-pre.jpeg"
+                src="/email-prev.jpeg"
                 alt="Invitely.gg Email Preview - House Party invitation with RSVP tracking, smart send time suggestions, and batch delivery to 30 guests"
                 width={800}
                 height={1000}

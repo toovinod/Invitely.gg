@@ -68,9 +68,9 @@ export function Hero() {
 
           <div className="w-full max-w-4xl mt-16 relative group">
             <div className="absolute -inset-4 bg-linear-to-b from-white/5 to-transparent blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
-            <div className="relative border border-white/8 bg-[#050505]">
+            <div className="relative border border-white/8">
               <Image
-                src="/workspace.jpeg"
+                src="/workspace-prev.jpeg"
                 alt="Invitely.gg Dashboard"
                 width={1600}
                 height={900}
