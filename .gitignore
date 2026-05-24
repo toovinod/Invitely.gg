@@ -42,4 +42,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
 /lib/generated/prisma

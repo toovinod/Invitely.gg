@@ -35,6 +35,12 @@ Invitely.gg is a server-first platform that handles invitation delivery at scale
 
 Built with a strong emphasis on type safety, minimal client-side overhead, and predictable performance.
 
+## Deploy your own
+
+One-click deploy to Vercel — you'll be prompted to set the environment variables listed in [`.env.example`](./.env.example):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FVinodbiradar09%2FInvitely.gg&env=BETTER_AUTH_SECRET,BETTER_AUTH_URL,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,DATABASE_URL,RESEND_API_KEY,FROM,NEXT_PUBLIC_APP_URL,APP_URL,CRON_SECRET&envDescription=Required%20to%20run%20Invitely.gg.%20See%20the%20.env.example%20file%20for%20what%20each%20one%20does.&envLink=https%3A%2F%2Fgithub.com%2FVinodbiradar09%2FInvitely.gg%2Fblob%2Fmain%2F.env.example&project-name=invitely-gg&repository-name=invitely-gg)
+
 ## Tech Stack
 
 - [Next.js](https://nextjs.org/) – framework
@@ -148,6 +154,14 @@ See [SECURITY.md](./SECURITY.md) for our responsible disclosure policy.
 ## Code of Conduct
 
 This project follows the [Contributor Covenant](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+## Support
+
+Need help? See [SUPPORT.md](./SUPPORT.md) — short version: questions go in [Discussions](https://github.com/Vinodbiradar09/Invitely.gg/discussions), bugs go in [Issues](https://github.com/Vinodbiradar09/Invitely.gg/issues), security goes to **security@invitely.gg**.
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for what shipped in each release.
 
 ## License
 
