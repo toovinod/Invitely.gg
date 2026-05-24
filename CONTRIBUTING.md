@@ -19,6 +19,7 @@ Changes that violate these principles will likely be rejected.
 ## Prerequisites
 
 - Node.js 20+
+- [pnpm](https://pnpm.io/) 10+
 - PostgreSQL
 - Git
 
@@ -37,10 +38,10 @@ git checkout -b feat/your-feature-name
 3. **Install dependencies:**
 
 ```bash
-npm install
+pnpm install
 ```
 
-4. **Set up your environment** — copy `.env.example` or refer to the README.
+4. **Set up your environment** — copy `.env.example` to `.env` and fill in the values.
 
 5. **Make your changes**, keeping commits focused and atomic.
 

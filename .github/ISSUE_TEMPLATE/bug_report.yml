@@ -1,0 +1,66 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly.
+title: "[bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report.
+        Please fill out the sections below — the more context you provide, the faster we can fix it.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One or two sentences describing the bug.
+      placeholder: When I send invitations to more than 50 contacts, the request times out.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps a maintainer can follow to see the issue.
+      placeholder: |
+        1. Go to /events/new
+        2. Add 60 recipients
+        3. Click "Send invitations"
+        4. Observe the timeout
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include error messages, screenshots, or recordings if you have them.
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Browser, OS, deployment (self-hosted / hosted), commit SHA if known.
+      placeholder: Chrome 130, macOS 15, hosted at invitely-gg.vercel.app
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have searched existing issues and could not find a duplicate.
+          required: true
+        - label: I am running the latest `main` (or have specified a commit SHA above).
+          required: true

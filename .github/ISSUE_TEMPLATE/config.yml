@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & general discussion
+    url: https://github.com/Vinodbiradar09/Invitely.gg/discussions
+    about: Use Discussions for questions, ideas, and conversations that aren't bugs or feature requests.
+  - name: 🔒 Security vulnerability
+    url: https://github.com/Vinodbiradar09/Invitely.gg/security/policy
+    about: Please report security issues privately — see SECURITY.md.

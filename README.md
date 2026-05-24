@@ -58,6 +58,7 @@ Built with a strong emphasis on type safety, minimal client-side overhead, and p
 ### Prerequisites
 
 - Node.js 20+
+- [pnpm](https://pnpm.io/) 10+ (the project pins `packageManager` in `package.json`)
 - PostgreSQL running locally or remotely
 
 ### 1. Clone the repository
@@ -70,12 +71,18 @@ cd Invitely.gg
 ### 2. Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 3. Configure environment variables
 
-Create a `.env` file at the root:
+Copy `.env.example` to `.env` and fill in real values:
+
+```bash
+cp .env.example .env
+```
+
+Key variables you'll need:
 
 ```env
 # Auth
@@ -108,13 +115,13 @@ CRON_SECRET=your_cron_secret_uuid
 ### 4. Set up the database
 
 ```bash
-npx prisma migrate dev
+pnpm exec prisma migrate dev
 ```
 
 ### 5. Start the development server
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 The app will be available at `http://localhost:3000`.
@@ -137,6 +144,10 @@ We love contributions! Here's how you can contribute:
 ## Security
 
 See [SECURITY.md](./SECURITY.md) for our responsible disclosure policy.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
 ## License
 
