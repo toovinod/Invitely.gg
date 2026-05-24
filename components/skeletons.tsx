@@ -13,7 +13,7 @@ export function EventListSkeleton() {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="border border-white/8 bg-[#0a0a0a] flex flex-col gap-3 p-4 sm:p-5"
+            className="border border-white/8 bg-white/2 flex flex-col gap-3 p-4 sm:p-5"
           >
             <div className="h-4 w-32 bg-white/5" />
             <div className="h-2 w-40 bg-white/5" />
@@ -36,7 +36,7 @@ export function EventListSkeleton() {
 
 export function GuestTableSkeleton() {
   return (
-    <div className="border border-white/8 bg-[#0a0a0a] flex flex-col">
+    <div className="border border-white/8 bg-white/2 flex flex-col">
       <div className="h-10 border-b border-white/6" />
       <div className="flex flex-col">
         {[...Array(5)].map((_, i) => (
@@ -56,7 +56,7 @@ export function GuestTableSkeleton() {
 
 export function SummaryCardsSkeleton() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border border-white/8 bg-[#0a0a0a] divide-x-0 sm:divide-x divide-y sm:divide-y-0 divide-white/6 animate-pulse">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border border-white/8 bg-white/2 divide-x-0 sm:divide-x divide-y sm:divide-y-0 divide-white/6 animate-pulse">
       {[...Array(5)].map((_, i) => (
         <div key={i} className="flex flex-col gap-1 px-4 py-3.5">
           <div className="h-2 w-16 bg-white/5" />
@@ -81,7 +81,7 @@ export function WorkspaceListSkeleton() {
         {[...Array(2)].map((_, i) => (
           <div
             key={i}
-            className="border border-white/8 bg-[#0a0a0a] flex flex-col gap-3 p-5"
+            className="border border-white/8 bg-white/2 flex flex-col gap-3 p-5"
           >
             <div className="flex flex-col gap-2">
               <div className="h-4 w-32 bg-white/5" />
@@ -131,7 +131,7 @@ export function NewEventFormSkeleton() {
 
 export function InsightsCardSkeleton() {
   return (
-    <div className="border border-white/8 bg-[#0a0a0a] p-4 sm:p-5 flex flex-col gap-3 animate-pulse">
+    <div className="border border-white/8 bg-white/2 p-4 sm:p-5 flex flex-col gap-3 animate-pulse">
       <div className="flex items-center justify-between">
         <div className="h-2 w-24 bg-white/5" />
         <div className="h-8 w-32 bg-white/5" />

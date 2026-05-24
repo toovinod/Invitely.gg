@@ -68,7 +68,7 @@ export default async function SendInvitationsPage({ params }: EventIdParams) {
         </Link>
       </div>
 
-      <div className="border border-white/8 bg-[#0a0a0a] px-4 py-3 flex flex-col gap-2">
+      <div className="border border-white/8 bg-white/2 px-4 py-3 flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <Calendar className="h-3.5 w-3.5 text-muted-foreground/80 shrink-0" />
           <span className="font-mono text-xs tabular-nums text-muted-foreground">
@@ -84,8 +84,16 @@ export default async function SendInvitationsPage({ params }: EventIdParams) {
       </div>
 
       {totalMembers === 0 ? (
-        <div className="relative overflow-hidden border border-dashed border-white/8 bg-[#070707] px-6 py-12 flex flex-col items-center gap-4 text-center">
-          <div className="flex flex-col gap-1.5 max-w-sm">
+        <div className="relative overflow-hidden border border-dashed border-white/8 bg-transparent flex flex-col items-center justify-center py-16 sm:py-20 px-6 gap-4 text-center">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(50% 70% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0) 70%)",
+            }}
+          />
+          <div className="relative flex flex-col gap-1.5 max-w-sm">
             <h3 className="font-sans text-base font-medium text-foreground">
               No contacts yet
             </h3>
@@ -93,7 +101,7 @@ export default async function SendInvitationsPage({ params }: EventIdParams) {
               Add members to a workspace before sending invitations.
             </p>
           </div>
-          <Link href="/workspace">
+          <Link href="/workspace" className="relative">
             <Button
               size="sm"
               className="font-sans text-sm h-9 cursor-pointer mt-1"

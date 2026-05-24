@@ -56,7 +56,7 @@ async function NewEventSection() {
 
   if (totalMembers === 0) {
     return (
-      <div className="relative overflow-hidden border border-dashed border-white/8 bg-[#070707] flex flex-col items-center gap-4 px-6 py-12 text-center">
+      <div className="relative overflow-hidden border border-dashed border-white/8 bg-transparent flex flex-col items-center gap-4 px-6 py-12 text-center">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
